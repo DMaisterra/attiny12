@@ -46,10 +46,10 @@ rjmp loopB
 
 ;long loop 
 loopB:
-ldi r16, 0xf
+ldi r16, 0xff
 
 loop1:
-ldi r17, 0xf
+ldi r17, 0xff
 
 loop2:
 dec r17
@@ -57,10 +57,10 @@ brne loop2
 dec r16
 brne loop1
 sbi  _SFR_IO_ADDR(PORTB), 0 ;cbi ddrb, 5
-ldi r16, 0xf
+ldi r16, 0xff
 
 loop3:
-ldi r17, 0xf
+ldi r17, 0xff
 
 loop4:
 dec r17
