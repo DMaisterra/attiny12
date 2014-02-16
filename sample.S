@@ -7,6 +7,9 @@
               OUT    SPH, @0
 .ENDM
 
+.equ TIMER_UP, 0x55
+.equ TIMER_LOW, 0xff
+
 
 .org 0x00
 reset:
@@ -43,10 +46,10 @@ sbi  _SFR_IO_ADDR(PORTB), 0
 ;rjmp loopB
 
 loopMacro:
-ldi r16, 0xff
+ldi r16, TIMER_LOW
 
 loopM1:
-ldi r17, 0xff
+ldi r17, TIMER_UP
 
 loopM2:
 dec r17
@@ -54,10 +57,10 @@ brne loopM2
 dec r16
 brne loopM1
 sbi  _SFR_IO_ADDR(PORTB), 0 ;cbi ddrb, 5
-ldi r16, 0xff
+ldi r16,  TIMER_LOW
 
 loopM3:
-ldi r17, 0xff
+ldi r17,  TIMER_UP
 
 loopM4:
 dec r17
