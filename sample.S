@@ -1,5 +1,8 @@
 #include <avr/io.h>
 
+#define i r22
+#define j r23
+
 .equ TIMER_UP, 0xff
 .equ TIMER_LOW, 0xff
 
@@ -18,10 +21,10 @@ brne loopM1
 .ENDM
 
 .MACRO  _DELAY8
-     clr r22
+     clr i
    _d8:
      nop
-     dec r22
+     dec i
      brne _d8
 .ENDM
 
@@ -54,28 +57,13 @@ main:
 sbi  _SFR_IO_ADDR(DDRB), 0
 sbi  _SFR_IO_ADDR(DDRB), 3
 
+
+
 blink:
 sbi  _SFR_IO_ADDR(PORTB), 0
 rcall delay
 cbi  _SFR_IO_ADDR(PORTB), 0
-rcall delay
-rcall pause
-rcall pause
-rcall pause
-rcall pause
-rcall pause
-rcall pause
-rcall pause
-rcall pause
-rcall pause
-rcall pause
-rcall pause
-rcall pause
-rcall pause
-rcall pause
-rcall pause
-rcall pause
-rcall pause
+;rcall delay
 rcall pause
 rcall pause
 rcall pause
