@@ -1,10 +1,10 @@
 #include <avr/io.h>
 
-.equ TIMER_UP, 0x35
+.equ TIMER_UP, 0xff
 .equ TIMER_LOW, 0xff
 
 
-.MACRO        MCR_DELAY
+.MACRO        _DELAY16
 ldi r16, TIMER_UP
 
 loopM1:
@@ -15,12 +15,14 @@ dec r17
 brne loopM2
 dec r16
 brne loopM1
-;ret
+.ENDM
 
-;              LDI    @0, low(@1)
-;              OUT    SPL, @0
-;              LDI    @0, high(@1)
-;              OUT    SPH, @0
+.MACRO  _DELAY8
+     clr r22
+   _d8:
+     nop
+     dec r22
+     brne _d8
 .ENDM
 
 
@@ -65,18 +67,13 @@ rjmp blink
 
 
 delay:
-    MCR_DELAY
+    _DELAY16
 ret
-
-#define  i = r22
 
 pause:
-     clr i
-   plupe:
-     nop
-     dec i
-     brne plupe
+    _DELAY8
 ret
+
 
 
 end:
