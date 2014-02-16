@@ -1,6 +1,6 @@
 #include <avr/io.h>
 
-.equ TIMER_UP, 0x25
+.equ TIMER_UP, 0x35
 .equ TIMER_LOW, 0xff
 
 
