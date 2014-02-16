@@ -49,10 +49,7 @@ defaultInt:
 reti;
 
 main:
-rjmp cfg;
-
-
-cfg:
+;init
 ;0 e 3 saidas IO
 sbi  _SFR_IO_ADDR(DDRB), 0
 sbi  _SFR_IO_ADDR(DDRB), 3
@@ -62,6 +59,25 @@ sbi  _SFR_IO_ADDR(PORTB), 0
 rcall delay
 cbi  _SFR_IO_ADDR(PORTB), 0
 rcall delay
+rcall pause
+rcall pause
+rcall pause
+rcall pause
+rcall pause
+rcall pause
+rcall pause
+rcall pause
+rcall pause
+rcall pause
+rcall pause
+rcall pause
+rcall pause
+rcall pause
+rcall pause
+rcall pause
+rcall pause
+rcall pause
+rcall pause
 rcall pause
 rjmp blink
 
