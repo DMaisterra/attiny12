@@ -1,13 +1,12 @@
-;http://nerdathome.blogspot.com.br/2008/04/avr-as-usage-tutorial.html
-
 #include <avr/io.h>
-;.include "/usr/share/avra/tn12def.inc"
-;.INCLUDE "tn12def.inc"
 
-;.device attiny12
+.MACRO        LSP
+              LDI    @0, low(@1)
+              OUT    SPL, @0
+              LDI    @0, high(@1)
+              OUT    SPH, @0
+.ENDM
 
-;.equ PORTB,0x18
-;.equ DDRB, 0x17
 
 .org 0x00
 reset:
@@ -35,13 +34,39 @@ rjmp cfg;
 
 
 cfg:
-;0 e # saidas IO
+;0 e 3 saidas IO
 sbi  _SFR_IO_ADDR(DDRB), 0
 sbi  _SFR_IO_ADDR(DDRB), 3
 
 cbi  _SFR_IO_ADDR(PORTB), 3
 sbi  _SFR_IO_ADDR(PORTB), 0
-rjmp loopB
+;rjmp loopB
+
+loopMacro:
+ldi r16, 0xff
+
+loopM1:
+ldi r17, 0xff
+
+loopM2:
+dec r17
+brne loopM2
+dec r16
+brne loopM1
+sbi  _SFR_IO_ADDR(PORTB), 0 ;cbi ddrb, 5
+ldi r16, 0xff
+
+loopM3:
+ldi r17, 0xff
+
+loopM4:
+dec r17
+brne loopM4
+dec r16
+brne loopM3
+cbi  _SFR_IO_ADDR(PORTB), 0 ;sbi ddrb, 5
+rjmp loopMacro
+
 
 
 ;long loop 
