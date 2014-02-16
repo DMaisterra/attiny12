@@ -60,11 +60,22 @@ sbi  _SFR_IO_ADDR(PORTB), 0
 rcall delay
 cbi  _SFR_IO_ADDR(PORTB), 0
 rcall delay
+rcall pause
 rjmp blink
 
 
 delay:
     MCR_DELAY
+ret
+
+#define  i = r22
+
+pause:
+     clr i
+   plupe:
+     nop
+     dec i
+     brne plupe
 ret
 
 
