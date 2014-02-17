@@ -3,19 +3,30 @@
 #define i r22
 #define j r23
 #define k r24
+#define param1 r18
+#define cnt r19
 
 
 .equ TIMER_UP, 0xff
 .equ TIMER_LOW, 0xff
 
 
+;blink n times
+.macro callBlink p count=1
+    ldi  cnt, \count
+	0:
+         rcall \p
+	 dec cnt
+        brne 0b
+.endm
+
 .macro WAIT
     clr j
-    2:
+    0:
 	inc j
-	brne 2b
-	dec i
-	brne 2b
+	brne 0b
+	dec param1
+	brne 0b
 .endm
 
 
@@ -59,28 +70,15 @@ sbi  _SFR_IO_ADDR(DDRB), 0
 sbi  _SFR_IO_ADDR(DDRB), 3
 ;cbi  _SFR_IO_ADDR(PORTB), 3
 
-;blink0 n times
-ldi  k,4
-   _m:
-     rcall blink0
-     dec k
-     brne _m
+blk:
+callBlink blink0 4
+callBlink blink 8
 
-;blink fast n times
-ldi  k,4
-   _m1:
-     rcall blink
-     dec k
-     brne _m1
 
-;blink0t n times
-ldi  k,20
-   _m2:
-     rcall blink
-     dec k
-     brne _m2
-
-rjmp end
+;rcall blink0
+;rcall blink0
+;rcall blink0
+rjmp blk
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 blink0:
@@ -91,17 +89,20 @@ rcall delay
 ret
 
 blink:
-cbi  _SFR_IO_ADDR(PORTB), 0
-rcall delay
 sbi  _SFR_IO_ADDR(PORTB), 0
+rcall delay
+cbi  _SFR_IO_ADDR(PORTB), 0
+rcall pause
+rcall pause
+rcall pause
 rcall pause
 rcall pause
 rcall pause
 ret
 
 delay:
-    ldi i,200
-    wait
+    ldi param1,200
+    WAIT
 ;    _DELAY16
 ret
 
