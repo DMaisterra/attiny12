@@ -9,6 +9,16 @@
 .equ TIMER_LOW, 0xff
 
 
+.macro WAIT
+    clr j
+    2:
+	inc j
+	brne 2b
+	dec i
+	brne 2b
+.endm
+
+
 .MACRO        _DELAY16
 ldi i, TIMER_UP
 
@@ -42,6 +52,7 @@ rjmp main;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;MAIN
 main:
+
 ;init
 ;0 e 3 saidas IO
 sbi  _SFR_IO_ADDR(DDRB), 0
@@ -49,18 +60,27 @@ sbi  _SFR_IO_ADDR(DDRB), 3
 ;cbi  _SFR_IO_ADDR(PORTB), 3
 
 ;blink0 n times
-;ldi  r24,5
-;   _m:
-;     rjmp blink
-;     dec r24
-;     brne _m
+ldi  k,4
+   _m:
+     rcall blink0
+     dec k
+     brne _m
 
-;rjmp blink0
-rjmp blink
-;rjmp blink0
-;rjmp blink
+;blink fast n times
+ldi  k,4
+   _m1:
+     rcall blink
+     dec k
+     brne _m1
+
+;blink0t n times
+ldi  k,20
+   _m2:
+     rcall blink
+     dec k
+     brne _m2
+
 rjmp end
-;rjmp main
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 blink0:
@@ -68,22 +88,21 @@ sbi  _SFR_IO_ADDR(PORTB), 0
 rcall delay
 cbi  _SFR_IO_ADDR(PORTB), 0
 rcall delay
-;rjmp blink0
 ret
 
 blink:
 cbi  _SFR_IO_ADDR(PORTB), 0
 rcall delay
 sbi  _SFR_IO_ADDR(PORTB), 0
-;rcall delay
 rcall pause
 rcall pause
 rcall pause
-;rjmp blink
 ret
 
 delay:
-    _DELAY16
+    ldi i,200
+    wait
+;    _DELAY16
 ret
 
 pause:
