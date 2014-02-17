@@ -59,10 +59,17 @@ main:
 ;0 e 3 saidas IO
 sbi  _SFR_IO_ADDR(DDRB), 0
 sbi  _SFR_IO_ADDR(DDRB), 3
-;cbi  _SFR_IO_ADDR(PORTB), 3
+
+;---Timer 0 Interrupt----
+    ldi R16,0b00000101   ; Prescale: 1.2MHz / 1024
+    out _SFR_IO_ADDR(TCCR0), R16 ; Interval: 853us  Overflows: 0.218s
+    sei
+;---Timer Interrupt Enable
+    ldi R16,0b00000010   ; Timer overflow interrupt enable bit set
+    out _SFR_IO_ADDR(TIMSK),R16
 
 ;rjmp blk1
-rjmp blk2
+rjmp end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -115,8 +122,27 @@ _callBlink blink 4
 rjmp blk2
 
 
-tc0i:
- rjmp blk2
+
+tc0i: 
+; rjmp blk1
+;reti
+
+; [Nominal int rate = 4.57Hz]
+   in R19 ,_SFR_IO_ADDR(SREG) ;save SREG
+   inc R18      ; Update counter for main loop codes
+;   mov R20,R18   ; Store "timer" to temporary register
+;   and R20,R17; Mask to determine LED blink rate   
+   andi R18, 0b00000001 ;Mask out lsb
+   breq led_off      ; If
+led_on:
+   sbi _SFR_IO_ADDR(PORTB),0         ; LED on
+   rjmp led_done
+led_off:
+   cbi _SFR_IO_ADDR(PORTB),0         ; LED off
+led_done:
+   out _SFR_IO_ADDR(SREG),R19
+   reti 
+
 
 
 end:
