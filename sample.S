@@ -1,10 +1,10 @@
 #include <avr/io.h>
 
-#define i r22
-#define j r23
-#define k r24
-#define param1 r18
-#define cnt r19
+#define i r18
+#define j r19
+#define k r20
+#define param1 r21
+#define callBlink1 r22
 
 
 .equ TIMER_UP, 0xff
@@ -13,14 +13,14 @@
 
 ;blink n times
 .macro callBlink p count=1
-    ldi  cnt, \count
+    ldi  callBlink1, \count
 	0:
          rcall \p
-	 dec cnt
+	 dec callBlink1
         brne 0b
 .endm
 
-.macro WAIT
+.macro wait
     clr j
     0:
 	inc j
@@ -92,6 +92,10 @@ blink:
 sbi  _SFR_IO_ADDR(PORTB), 0
 rcall delay
 cbi  _SFR_IO_ADDR(PORTB), 0
+rcall pause
+rcall pause
+rcall pause
+rcall pause
 rcall pause
 rcall pause
 rcall pause
