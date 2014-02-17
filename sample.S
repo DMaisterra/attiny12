@@ -48,7 +48,7 @@ brne 0b
 rjmp main;
    RETI            ; IRQ0 Handler
    RETI             ; Pin Change Handler
-   reti;rjmp tc0i         ; Timer0 overflow
+   rjmp tc0i         ; Timer0 overflow
    RETI            ; EEPROM Ready Handler
    RETI             ; Analog Comparitor Handler
 
@@ -61,15 +61,9 @@ sbi  _SFR_IO_ADDR(DDRB), 0
 sbi  _SFR_IO_ADDR(DDRB), 3
 ;cbi  _SFR_IO_ADDR(PORTB), 3
 
-blk:
-_callBlink blink0 4
-_callBlink blink 8
+;rjmp blk1
+rjmp blk2
 
-
-;rcall blink0
-;rcall blink0
-;rcall blink0
-rjmp blk
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 blink0:
@@ -107,6 +101,23 @@ pause:
     ldi param1,1
     _wait8
 ret
+
+
+
+blk1:
+_callBlink blink0 4
+_callBlink blink 8
+rjmp blk1
+
+blk2:
+_callBlink blink0 1
+_callBlink blink 4
+rjmp blk2
+
+
+tc0i:
+ rjmp blk2
+
 
 end:
 rjmp end;
