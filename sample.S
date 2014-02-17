@@ -7,12 +7,12 @@
 #define callBlink1 r22
 
 
-.equ TIMER_UP, 0xff
-.equ TIMER_LOW, 0xff
+;.equ TIMER_UP, 0xff
+;.equ TIMER_LOW, 0xff
 
 
 ;blink n times
-.macro callBlink p count=1
+.macro _callBlink p count=1
     ldi  callBlink1, \count
 	0:
          rcall \p
@@ -20,7 +20,7 @@
         brne 0b
 .endm
 
-.macro wait
+.macro _wait8
     clr j
     0:
 	inc j
@@ -30,27 +30,18 @@
 .endm
 
 
-.MACRO        _DELAY16
-ldi i, TIMER_UP
+.MACRO  _wait16 upper8=1 lower8=255
+ldi i, \upper8
 
-_d16_1:
-ldi j, TIMER_LOW
+0:
+ldi j, \lower8
 
-_d16_2:
+1:
 dec j
-brne _d16_2
+brne 1b
 dec i
-brne _d16_1
+brne 0b
 .ENDM
-
-.MACRO  _DELAY8
-     clr i
-   _d8:
-     nop
-     dec i
-     brne _d8
-.ENDM
-
 
 
 .org 0x00
@@ -71,8 +62,8 @@ sbi  _SFR_IO_ADDR(DDRB), 3
 ;cbi  _SFR_IO_ADDR(PORTB), 3
 
 blk:
-callBlink blink0 4
-callBlink blink 8
+_callBlink blink0 4
+_callBlink blink 8
 
 
 ;rcall blink0
@@ -105,13 +96,16 @@ rcall pause
 ret
 
 delay:
+    ;parametrs
     ldi param1,200
-    WAIT
-;    _DELAY16
+    _wait8
+    ;hardcoded
+    _wait16 255 255
 ret
 
 pause:
-    _DELAY8
+    ldi param1,1
+    _wait8
 ret
 
 end:
