@@ -63,12 +63,12 @@ sbi  _SFR_IO_ADDR(DDRB), 3
 ;---Timer 0 Interrupt----
     ldi R16,0b00000101   ; Prescale: 1.2MHz / 1024
     out _SFR_IO_ADDR(TCCR0), R16 ; Interval: 853us  Overflows: 0.218s
-    sei
+    sei ; enable ints
 ;---Timer Interrupt Enable
     ldi R16,0b00000010   ; Timer overflow interrupt enable bit set
     out _SFR_IO_ADDR(TIMSK),R16
 
-;rjmp blk1
+rjmp blk1
 rjmp end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -112,7 +112,7 @@ ret
 
 
 blk1:
-_callBlink blink0 4
+;_callBlink blink0 4
 _callBlink blink 8
 rjmp blk1
 
