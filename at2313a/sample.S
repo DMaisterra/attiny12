@@ -8,16 +8,18 @@
 
 
 ;atTiny12
-#define outPort PORTB
-#define dirPort DDRB
-#define outPin0 0
-#define outPin0 3
+;#define outPort PORTB
+;#define dirPort DDRB
+;#define outPin0 0
+;#define outPin0 3
 
 ;atTiny2313
 #define outPort PORTD
 #define dirPort DDRD
-#define outPin0 5
-#define outPin0 4
+#define outPin2 5
+#define outPin1 4
+#define outPin0 3
+
 
 
 ;.equ TIMER_UP, 0xff
@@ -68,11 +70,14 @@ rjmp main;
 ;;;;;;;;;;;;;;;;;;;;;;;;MAIN
 main:
 
-;init
+;setup
 ;saidas IO
 sbi  _SFR_IO_ADDR(dirPort), outPin0
 sbi  _SFR_IO_ADDR(dirPort), outPin1
 
+;go
+;rjmp configTimerTiny12
+;rjmp configTimerTiny2313
 rjmp blk2
 rjmp end
 
@@ -80,14 +85,16 @@ rjmp end
 
 configTimerTiny12:
 ;---Timer 0 Interrupt----
-    ldi R16,0b00000101   ; Prescale: 1.2MHz / 1024
-    out _SFR_IO_ADDR(TCCR0), R16 ; Interval: 853us  Overflows: 0.218s
-    sei ; enable ints
+    ;ldi R16,0b00000101   ; Prescale: 1.2MHz / 1024
+    ;out _SFR_IO_ADDR(TCCR0), R16 ; Interval: 853us  Overflows: 0.218s
+    ;sei ; enable ints
 ;---Timer Interrupt Enable
-    ldi R16,0b00000010   ; Timer overflow interrupt enable bit set
-    out _SFR_IO_ADDR(TIMSK),R16
+    ;ldi R16,0b00000010   ; Timer overflow interrupt enable bit set
+    ;out _SFR_IO_ADDR(TIMSK),R16
 ret
 
+configTimerTiny2313:
+ret
 
 blink0:
 sbi  _SFR_IO_ADDR(outPort), outPin0
