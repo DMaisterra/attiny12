@@ -4,6 +4,19 @@ __SREG__ = 0x3f
 __tmp_reg__ = 0
 __zero_reg__ = 1
 	.text
+.global	onLed
+	.type	onLed, @function
+onLed:
+/* prologue: function */
+/* frame size = 0 */
+/* stack size = 0 */
+.L__stack_usage = 0
+	cpse r24,__zero_reg__
+	rjmp .L1
+	cbi 0x12,5
+.L1:
+	ret
+	.size	onLed, .-onLed
 .global	sleep
 	.type	sleep, @function
 sleep:
@@ -11,8 +24,8 @@ sleep:
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
-	rjmp .L2
-.L3:
+	rjmp .L5
+.L6:
 	ldi r30,lo8(249)
 	ldi r31,hi8(249)
 	1: sbiw r30,1
@@ -20,9 +33,9 @@ sleep:
 	rjmp .
 	nop
 	subi r24,lo8(-(-1))
-.L2:
+.L5:
 	cpse r24,__zero_reg__
-	rjmp .L3
+	rjmp .L6
 /* epilogue start */
 	ret
 	.size	sleep, .-sleep
@@ -36,14 +49,23 @@ main:
 .L__stack_usage = 0
 	sbi 0x11,5
 	sbi 0x11,4
-	cbi 0x12,4
-.L5:
 	cbi 0x12,5
-	ldi r24,lo8(10)
+	cbi 0x12,4
+.L8:
+	cbi 0x12,5
+	ldi r24,lo8(-1)
+	rcall sleep
+	ldi r24,lo8(-1)
 	rcall sleep
 	sbi 0x12,5
-	ldi r24,lo8(100)
+	ldi r24,lo8(-1)
 	rcall sleep
-	rjmp .L5
+	ldi r24,lo8(-1)
+	rcall sleep
+	ldi r24,lo8(-1)
+	rcall sleep
+	ldi r24,lo8(-1)
+	rcall sleep
+	rjmp .L8
 	.size	main, .-main
 	.ident	"GCC: (GNU) 4.7.0"

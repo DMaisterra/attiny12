@@ -1,4 +1,7 @@
 /* ledblink.c, an LED blinking program at2313a */
+
+#define F_CPU 1000000UL
+
 #include <avr/io.h>
 #include <util/delay.h>
 
@@ -10,29 +13,43 @@
 
 
 
-void sleep(uint8_t millisec)
-{
-        while(millisec)
-
-        {
-                _delay_ms(1);/* 1 ms delay */
-                millisec--;
-        }
+void onLed(uint8_t ledNum){
+    switch(ledNum++){
+    case 0: {
+	outPort &= ~(1<<outPin0);break;
+    }
+    
+    }
 }
-main()
-{
 
-        dirPort |=(1<<outPin0);  /* PC2 will now be the output pin */
-        dirPort |=(1<<outPin1);  /* PC2 will now be the output pin */
-        outPort &= ~(1<<outPin1);/* PC2 LOW */
 
-        while(1)
-        {
-                outPort &= ~(1<<outPin0);/* PC2 LOW */
-                sleep(10);/* 100 ms delay */
 
-                outPort |=(1<<outPin0); /* PC2 HIGH */
-                sleep(100);/* 100 ms delay */
+
+void sleep(uint8_t millisec){
+    while(millisec){
+        _delay_ms(1);
+        millisec--;
+    }
+}
+
+
+
+
+main(){
+    dirPort |=(1<<outPin0);
+    dirPort |=(1<<outPin1);
+    outPort &= ~(1<<outPin0);
+    outPort &= ~(1<<outPin1);
+
+    while(1){
+        outPort &= ~(1<<outPin0);
+        sleep(255);
+        sleep(255);
+        outPort |=(1<<outPin0);
+        sleep(255);
+        sleep(255);
+        sleep(255);
+        sleep(255);
         }
 }
 
