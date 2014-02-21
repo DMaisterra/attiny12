@@ -1,4 +1,4 @@
-/* ledblink.c, an LED blinking program */
+/* ledblink.c, an LED blinking program at2313a */
 #include <avr/io.h>
 #include <util/delay.h>
 
