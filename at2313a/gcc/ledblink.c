@@ -7,10 +7,15 @@
 #include <avr/interrupt.h> 
 
 #define dirPort DDRD
-#define outPin0 PD5
+#define outPin0 PD3
 #define outPin1 PD4
-#define outPin2 PD3
+#define outPin2 PD5
+
 #define outPort (*((volatile bits_t*)(&PORTD)))
+#define fb frameBuffer[0]
+#define  out0 outPort.bit5
+#define  out1 outPort.bit4
+#define  out2 outPort.bit3
 
 typedef struct {
  unsigned char bit0:1;
@@ -24,31 +29,7 @@ typedef struct {
 } bits_t;
 
 
-
-//teste gcc
-#define set_bits_macro(port,mask) ((port) |= (mask))
-
-
-char err_str[] = "Your program has lies !";
-
-//teste gcc - fim
-
-volatile bits_t bit_array[1];
-
-
-void ledOn(uint8_t ledNum){
-    switch(ledNum){
-    case 0: 
-	{outPort &= ~(1<<outPin0);}break;
-    }
-}
-
-void ledOff(uint8_t ledNum){
-    switch(ledNum){
-    case 0: 
-	{outPort |= (1<<outPin0);}break;
-    }
-}
+volatile bits_t frameBuffer[1];
 
 
 void sleep(uint8_t millisec){
@@ -65,7 +46,7 @@ void timer0(void)
          TIMSK |= (1 << TOIE0);         //Set bit 1 in TIMSK to enable Timer 1 overflow interrupt.
     }
 
-main(){
+int main(){
 
     timer0();
     sei();
@@ -73,34 +54,29 @@ main(){
     //IO output
     dirPort |=(1<<outPin0);
     dirPort |=(1<<outPin1);
-    //all IO = 0
-    outPort &= ~(1<<outPin0);
-    outPort &= ~(1<<outPin1);
-
-    set_bits_macro (outPort, 0xf0);
-
-
-bit_array[0].b0 = 1;
-
-
-
+    dirPort |=(1<<outPin2);
+        //all IO = 0
+ //   outPort = 0;
+    PORTD |=  _BV( PD5 );
 
     while(1){
-        ledOn(0);
-        //sleep(55);
+        fb.bit0 = 1;
         sleep(255);
-        //ledOff(0);
+        fb.bit0 = 0;
         sleep(255);
-        //sleep(255);
-        //sleep(255);
-//        sleep(255);
+
+        fb.bit1 = 1;
+        sleep(255);
+        fb.bit1 = 0;
+        sleep(255);
+
         }
+
 }
 
 ISR (TIMER0_OVF_vect)
 {
-
-     outPort.bit5 = bit_array[0].b0 ;
-
-   //ledOff(0);
+	out0 = fb.bit0 ;
+	out1 = fb.bit1 ;
+	out2 = fb.bit2 ;
 }

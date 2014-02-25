@@ -49,7 +49,7 @@ all: LedBlink.elf secondary-outputs
 LedBlink.elf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: AVR C Linker'
-	avr-gcc -Wl,-Map,LedBlink.map -mmcu=attiny2313a -o "LedBlink.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	avr-gcc -Wl,-Map,LedBlink.map -mmcu=attiny2313 -o "LedBlink.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -73,7 +73,7 @@ LedBlink.eep: LedBlink.elf
 
 sizedummy: LedBlink.elf
 	@echo 'Invoking: Print Size'
-	-avr-size --format=avr --mcu=attiny2313a LedBlink.elf
+	-avr-size --format=avr --mcu=attiny2313 LedBlink.elf
 	@echo 'Finished building: $@'
 	@echo ' '
 

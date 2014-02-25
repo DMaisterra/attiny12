@@ -32,6 +32,9 @@ endif
 LSS += \
 LedBlink.lss \
 
+FLASH_IMAGE += \
+LedBlink.hex \
+
 SIZEDUMMY += \
 sizedummy \
 
@@ -49,7 +52,13 @@ LedBlink.elf: $(OBJS) $(USER_OBJS)
 
 LedBlink.lss: LedBlink.elf
 	@echo 'Invoking: AVR Create Extended Listing'
-	-avr-objdump -h -S LedBlink.elf  >"LedBlink.lss"
+	-avr-objdump -h -S -d LedBlink.elf  >"LedBlink.lss"
+	@echo 'Finished building: $@'
+	@echo ' '
+
+LedBlink.hex: LedBlink.elf
+	@echo 'Create Flash image (ihex format)'
+	-avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex LedBlink.elf  "LedBlink.hex"
 	@echo 'Finished building: $@'
 	@echo ' '
 
@@ -61,10 +70,10 @@ sizedummy: LedBlink.elf
 
 # Other Targets
 clean:
-	-$(RM) $(OBJS)$(C_DEPS)$(ASM_DEPS)$(ELFS)$(LSS)$(S_DEPS)$(SIZEDUMMY)$(S_UPPER_DEPS) LedBlink.elf
+	-$(RM) $(OBJS)$(C_DEPS)$(ASM_DEPS)$(FLASH_IMAGE)$(ELFS)$(LSS)$(S_DEPS)$(SIZEDUMMY)$(S_UPPER_DEPS) LedBlink.elf
 	-@echo ' '
 
-secondary-outputs: $(LSS) $(SIZEDUMMY)
+secondary-outputs: $(LSS) $(FLASH_IMAGE) $(SIZEDUMMY)
 
 .PHONY: all clean dependents
 .SECONDARY:
