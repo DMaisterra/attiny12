@@ -10,6 +10,9 @@
 #define outPin0 PD3
 #define outPin1 PD4
 #define outPin2 PD5
+#define ON 1
+#define OFF 0
+
 
 #define outPort (*((volatile bits_t*)(&PORTD)))
 #define fb frameBuffer[0]
@@ -49,27 +52,28 @@ void timer0(void)
 int main(){
 
     timer0();
-    sei();
+    ////  sei();
 
-    //IO output
-    dirPort |=(1<<outPin0);
-    dirPort |=(1<<outPin1);
-    dirPort |=(1<<outPin2);
-        //all IO = 0
- //   outPort = 0;
-    PORTD |=  _BV( PD5 );
+
+
 
     while(1){
-        fb.bit0 = 1;
-        sleep(255);
-        fb.bit0 = 0;
+
+    	//dirPort &=~(1<<outPinX);//input triz
+    	//dirPort |=(1<<outPinX); //output
+
+
+    dirPort &=~(1<<outPin0);
+    dirPort |=(1<<outPin1);
+    dirPort |=(1<<outPin2);
+
+        out1 = ON;
+        out2 = OFF;
         sleep(255);
 
-        fb.bit1 = 1;
+        out1 = OFF;
+        out2 = ON;
         sleep(255);
-        fb.bit1 = 0;
-        sleep(255);
-
         }
 
 }

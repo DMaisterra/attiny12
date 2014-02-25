@@ -3,15 +3,15 @@ LedBlink.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         000000f8  00000000  00000000  00000074  2**1
+  0 .text         000000cc  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .bss          00000001  00800060  00800060  0000016c  2**0
+  1 .bss          00000001  00800060  00800060  00000140  2**0
                   ALLOC
-  2 .stab         00000b64  00000000  00000000  0000016c  2**2
+  2 .stab         00000b34  00000000  00000000  00000140  2**2
                   CONTENTS, READONLY, DEBUGGING
-  3 .stabstr      0000084d  00000000  00000000  00000cd0  2**0
+  3 .stabstr      0000084d  00000000  00000000  00000c74  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .comment      00000011  00000000  00000000  0000151d  2**0
+  4 .comment      00000011  00000000  00000000  000014c1  2**0
                   CONTENTS, READONLY
 
 Disassembly of section .text:
@@ -23,7 +23,7 @@ Disassembly of section .text:
    6:	1d c0       	rjmp	.+58     	; 0x42 <__bad_interrupt>
    8:	1c c0       	rjmp	.+56     	; 0x42 <__bad_interrupt>
    a:	1b c0       	rjmp	.+54     	; 0x42 <__bad_interrupt>
-   c:	50 c0       	rjmp	.+160    	; 0xae <__vector_6>
+   c:	3a c0       	rjmp	.+116    	; 0x82 <__vector_6>
    e:	19 c0       	rjmp	.+50     	; 0x42 <__bad_interrupt>
   10:	18 c0       	rjmp	.+48     	; 0x42 <__bad_interrupt>
   12:	17 c0       	rjmp	.+46     	; 0x42 <__bad_interrupt>
@@ -57,7 +57,7 @@ Disassembly of section .text:
   3a:	b1 07       	cpc	r27, r17
   3c:	e1 f7       	brne	.-8      	; 0x36 <.do_clear_bss_loop>
   3e:	14 d0       	rcall	.+40     	; 0x68 <main>
-  40:	59 c0       	rjmp	.+178    	; 0xf4 <_exit>
+  40:	43 c0       	rjmp	.+134    	; 0xc8 <_exit>
 
 00000042 <__bad_interrupt>:
   42:	de cf       	rjmp	.-68     	; 0x0 <__vectors>
@@ -121,99 +121,81 @@ int main(){
 
     timer0();
   68:	f8 df       	rcall	.-16     	; 0x5a <timer0>
-    sei();
-  6a:	78 94       	sei
 
-    //IO output
-    dirPort |=(1<<outPin0);
-  6c:	8b 9a       	sbi	0x11, 3	; 17
-    dirPort |=(1<<outPin1);
-  6e:	8c 9a       	sbi	0x11, 4	; 17
-    dirPort |=(1<<outPin2);
-  70:	8d 9a       	sbi	0x11, 5	; 17
-        //all IO = 0
- //   outPort = 0;
-    PORTD |=  _BV( PD5 );
-  72:	95 9a       	sbi	0x12, 5	; 18
 
     while(1){
-        fb.bit0 = 1;
-  74:	80 91 60 00 	lds	r24, 0x0060
-  78:	81 60       	ori	r24, 0x01	; 1
-  7a:	80 93 60 00 	sts	0x0060, r24
-        sleep(255);
-  7e:	8f ef       	ldi	r24, 0xFF	; 255
-  80:	e1 df       	rcall	.-62     	; 0x44 <sleep>
-        fb.bit0 = 0;
-  82:	80 91 60 00 	lds	r24, 0x0060
-  86:	8e 7f       	andi	r24, 0xFE	; 254
-  88:	80 93 60 00 	sts	0x0060, r24
-        sleep(255);
-  8c:	8f ef       	ldi	r24, 0xFF	; 255
-  8e:	da df       	rcall	.-76     	; 0x44 <sleep>
 
-        fb.bit1 = 1;
-  90:	80 91 60 00 	lds	r24, 0x0060
-  94:	82 60       	ori	r24, 0x02	; 2
-  96:	80 93 60 00 	sts	0x0060, r24
-        sleep(255);
-  9a:	8f ef       	ldi	r24, 0xFF	; 255
-  9c:	d3 df       	rcall	.-90     	; 0x44 <sleep>
-        fb.bit1 = 0;
-  9e:	80 91 60 00 	lds	r24, 0x0060
-  a2:	8d 7f       	andi	r24, 0xFD	; 253
-  a4:	80 93 60 00 	sts	0x0060, r24
-        sleep(255);
-  a8:	8f ef       	ldi	r24, 0xFF	; 255
-  aa:	cc df       	rcall	.-104    	; 0x44 <sleep>
-  ac:	e3 cf       	rjmp	.-58     	; 0x74 <main+0xc>
 
-000000ae <__vector_6>:
+    dirPort &=~(1<<outPin0);
+  6a:	8b 98       	cbi	0x11, 3	; 17
+    dirPort |=(1<<outPin1);
+  6c:	8c 9a       	sbi	0x11, 4	; 17
+    dirPort |=(1<<outPin2);
+  6e:	8d 9a       	sbi	0x11, 5	; 17
+
+        out1 = ON;
+  70:	94 9a       	sbi	0x12, 4	; 18
+        out2 = OFF;
+  72:	93 98       	cbi	0x12, 3	; 18
+        sleep(255);
+  74:	8f ef       	ldi	r24, 0xFF	; 255
+  76:	e6 df       	rcall	.-52     	; 0x44 <sleep>
+
+        out1 = OFF;
+  78:	94 98       	cbi	0x12, 4	; 18
+        out2 = ON;
+  7a:	93 9a       	sbi	0x12, 3	; 18
+        sleep(255);
+  7c:	8f ef       	ldi	r24, 0xFF	; 255
+  7e:	e2 df       	rcall	.-60     	; 0x44 <sleep>
+  80:	f4 cf       	rjmp	.-24     	; 0x6a <main+0x2>
+
+00000082 <__vector_6>:
         }
 
 }
 
 ISR (TIMER0_OVF_vect)
 {
-  ae:	1f 92       	push	r1
-  b0:	0f 92       	push	r0
-  b2:	0f b6       	in	r0, 0x3f	; 63
-  b4:	0f 92       	push	r0
-  b6:	11 24       	eor	r1, r1
-  b8:	8f 93       	push	r24
+  82:	1f 92       	push	r1
+  84:	0f 92       	push	r0
+  86:	0f b6       	in	r0, 0x3f	; 63
+  88:	0f 92       	push	r0
+  8a:	11 24       	eor	r1, r1
+  8c:	8f 93       	push	r24
 	out0 = fb.bit0 ;
-  ba:	80 91 60 00 	lds	r24, 0x0060
-  be:	80 fd       	sbrc	r24, 0
-  c0:	95 9a       	sbi	0x12, 5	; 18
-  c2:	80 ff       	sbrs	r24, 0
-  c4:	95 98       	cbi	0x12, 5	; 18
+  8e:	80 91 60 00 	lds	r24, 0x0060
+  92:	80 fd       	sbrc	r24, 0
+  94:	95 9a       	sbi	0x12, 5	; 18
+  96:	80 ff       	sbrs	r24, 0
+  98:	95 98       	cbi	0x12, 5	; 18
 	out1 = fb.bit1 ;
-  c6:	80 91 60 00 	lds	r24, 0x0060
-  ca:	86 95       	lsr	r24
-  cc:	81 70       	andi	r24, 0x01	; 1
-  ce:	80 fd       	sbrc	r24, 0
-  d0:	94 9a       	sbi	0x12, 4	; 18
-  d2:	80 ff       	sbrs	r24, 0
-  d4:	94 98       	cbi	0x12, 4	; 18
+  9a:	80 91 60 00 	lds	r24, 0x0060
+  9e:	86 95       	lsr	r24
+  a0:	81 70       	andi	r24, 0x01	; 1
+  a2:	80 fd       	sbrc	r24, 0
+  a4:	94 9a       	sbi	0x12, 4	; 18
+  a6:	80 ff       	sbrs	r24, 0
+  a8:	94 98       	cbi	0x12, 4	; 18
 	out2 = fb.bit2 ;
-  d6:	80 91 60 00 	lds	r24, 0x0060
-  da:	82 fb       	bst	r24, 2
-  dc:	88 27       	eor	r24, r24
-  de:	80 f9       	bld	r24, 0
-  e0:	80 fd       	sbrc	r24, 0
-  e2:	93 9a       	sbi	0x12, 3	; 18
-  e4:	80 ff       	sbrs	r24, 0
-  e6:	93 98       	cbi	0x12, 3	; 18
+  aa:	80 91 60 00 	lds	r24, 0x0060
+  ae:	82 fb       	bst	r24, 2
+  b0:	88 27       	eor	r24, r24
+  b2:	80 f9       	bld	r24, 0
+  b4:	80 fd       	sbrc	r24, 0
+  b6:	93 9a       	sbi	0x12, 3	; 18
+  b8:	80 ff       	sbrs	r24, 0
+  ba:	93 98       	cbi	0x12, 3	; 18
 }
-  e8:	8f 91       	pop	r24
-  ea:	0f 90       	pop	r0
-  ec:	0f be       	out	0x3f, r0	; 63
-  ee:	0f 90       	pop	r0
-  f0:	1f 90       	pop	r1
-  f2:	18 95       	reti
+  bc:	8f 91       	pop	r24
+  be:	0f 90       	pop	r0
+  c0:	0f be       	out	0x3f, r0	; 63
+  c2:	0f 90       	pop	r0
+  c4:	1f 90       	pop	r1
+  c6:	18 95       	reti
 
-000000f4 <_exit>:
-  f4:	f8 94       	cli
+000000c8 <_exit>:
+  c8:	f8 94       	cli
 
-000000f6 <__stop_program>:
-  f6:	ff cf       	rjmp	.-2      	; 0xf6 <__stop_program>
+000000ca <__stop_program>:
+  ca:	ff cf       	rjmp	.-2      	; 0xca <__stop_program>
