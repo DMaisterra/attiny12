@@ -11,13 +11,13 @@
 #define outPort PORTB
 #define dirPort DDRB
 #define outPin0 0
-#define outPin0 3
+#define outPin1 3
 
 ;atTiny2313
-#define outPort PORTD
-#define dirPort DDRD
-#define outPin0 5
-#define outPin0 4
+;#define outPort PORTD
+;#define dirPort DDRD
+;#define outPin0 5
+;#define outPin1 4
 
 
 ;.equ TIMER_UP, 0xff

@@ -3,15 +3,15 @@ LedBlink.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         000000e2  00000000  00000000  00000074  2**1
+  0 .text         000000e4  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .bss          00000001  00800060  00800060  00000156  2**0
+  1 .bss          00000001  00800060  00800060  00000158  2**0
                   ALLOC
-  2 .stab         00000ba0  00000000  00000000  00000158  2**2
+  2 .stab         00000bac  00000000  00000000  00000158  2**2
                   CONTENTS, READONLY, DEBUGGING
-  3 .stabstr      0000084d  00000000  00000000  00000cf8  2**0
+  3 .stabstr      0000084c  00000000  00000000  00000d04  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .comment      00000011  00000000  00000000  00001545  2**0
+  4 .comment      00000011  00000000  00000000  00001550  2**0
                   CONTENTS, READONLY
 
 Disassembly of section .text:
@@ -22,8 +22,8 @@ Disassembly of section .text:
    4:	1e c0       	rjmp	.+60     	; 0x42 <__bad_interrupt>
    6:	1d c0       	rjmp	.+58     	; 0x42 <__bad_interrupt>
    8:	1c c0       	rjmp	.+56     	; 0x42 <__bad_interrupt>
-   a:	1b c0       	rjmp	.+54     	; 0x42 <__bad_interrupt>
-   c:	45 c0       	rjmp	.+138    	; 0x98 <__vector_6>
+   a:	47 c0       	rjmp	.+142    	; 0x9a <__vector_5>
+   c:	1a c0       	rjmp	.+52     	; 0x42 <__bad_interrupt>
    e:	19 c0       	rjmp	.+50     	; 0x42 <__bad_interrupt>
   10:	18 c0       	rjmp	.+48     	; 0x42 <__bad_interrupt>
   12:	17 c0       	rjmp	.+46     	; 0x42 <__bad_interrupt>
@@ -57,7 +57,7 @@ Disassembly of section .text:
   3a:	b1 07       	cpc	r27, r17
   3c:	e1 f7       	brne	.-8      	; 0x36 <.do_clear_bss_loop>
   3e:	14 d0       	rcall	.+40     	; 0x68 <main>
-  40:	4e c0       	rjmp	.+156    	; 0xde <_exit>
+  40:	4f c0       	rjmp	.+158    	; 0xe0 <_exit>
 
 00000042 <__bad_interrupt>:
   42:	de cf       	rjmp	.-68     	; 0x0 <__vectors>
@@ -99,18 +99,18 @@ void sleep(uint8_t millisec){
 }
   58:	08 95       	ret
 
-0000005a <timer0>:
+0000005a <timer>:
 
-void timer0(void)
+void timer(void)
 {
-	TCCR0A = 0x00;                //Timer counter control register
-  5a:	10 be       	out	0x30, r1	; 48
-	TCCR0B = (0 << WGM02)|(1 << CS02)|(0 << CS01)|(0 << CS00); // WGM=0, prescale at 8
+	TCCR1A = 0x00;                //Timer counter control register
+  5a:	1f bc       	out	0x2f, r1	; 47
+	TCCR1B = (0 << WGM02)|(1 << CS02)|(0 << CS01)|(0 << CS00); // WGM=0, prescale at 8
   5c:	84 e0       	ldi	r24, 0x04	; 4
-  5e:	83 bf       	out	0x33, r24	; 51
-	TIMSK |= (1 << TOIE0);         //Set bit 1 in TIMSK to enable Timer 1 overflow interrupt.
+  5e:	8e bd       	out	0x2e, r24	; 46
+	TIMSK |= (1 << TOIE1);         //Set bit 1 in TIMSK to enable Timer 1 overflow interrupt.
   60:	89 b7       	in	r24, 0x39	; 57
-  62:	82 60       	ori	r24, 0x02	; 2
+  62:	80 68       	ori	r24, 0x80	; 128
   64:	89 bf       	out	0x39, r24	; 57
   66:	08 95       	ret
 
@@ -119,110 +119,112 @@ void timer0(void)
 
 int main(){
 
-	timer0();
-  68:	f8 df       	rcall	.-16     	; 0x5a <timer0>
+	timer();
+  68:	f8 df       	rcall	.-16     	; 0x5a <timer>
+	sei();
+  6a:	78 94       	sei
 
 		//dirPort &=~(1<<outPinX);//input triz
 		//dirPort |=(1<<outPinX); //output
 
 
 		dirPort &=~(1<<outPin0);//triz
-  6a:	8b 98       	cbi	0x11, 3	; 17
+  6c:	8b 98       	cbi	0x11, 3	; 17
 		dirPort |=(1<<outPin1);
-  6c:	8c 9a       	sbi	0x11, 4	; 17
+  6e:	8c 9a       	sbi	0x11, 4	; 17
 		dirPort |=(1<<outPin2);
-  6e:	8d 9a       	sbi	0x11, 5	; 17
+  70:	8d 9a       	sbi	0x11, 5	; 17
 
 		//LED 0
 		out1 = ON;
-  70:	94 9a       	sbi	0x12, 4	; 18
+  72:	94 9a       	sbi	0x12, 4	; 18
 		out2 = OFF;
-  72:	95 98       	cbi	0x12, 5	; 18
+  74:	95 98       	cbi	0x12, 5	; 18
 		sleep(255);
-  74:	8f ef       	ldi	r24, 0xFF	; 255
-  76:	e6 df       	rcall	.-52     	; 0x44 <sleep>
+  76:	8f ef       	ldi	r24, 0xFF	; 255
+  78:	e5 df       	rcall	.-54     	; 0x44 <sleep>
 
 		//LED1
 		out1 = OFF;
-  78:	94 98       	cbi	0x12, 4	; 18
+  7a:	94 98       	cbi	0x12, 4	; 18
 		out2 = ON;
-  7a:	95 9a       	sbi	0x12, 5	; 18
+  7c:	95 9a       	sbi	0x12, 5	; 18
 		sleep(255);
-  7c:	8f ef       	ldi	r24, 0xFF	; 255
-  7e:	e2 df       	rcall	.-60     	; 0x44 <sleep>
+  7e:	8f ef       	ldi	r24, 0xFF	; 255
+  80:	e1 df       	rcall	.-62     	; 0x44 <sleep>
 
 		dirPort |=(1<<outPin0);
-  80:	8b 9a       	sbi	0x11, 3	; 17
+  82:	8b 9a       	sbi	0x11, 3	; 17
 		dirPort &=~(1<<outPin1);//triz
-  82:	8c 98       	cbi	0x11, 4	; 17
+  84:	8c 98       	cbi	0x11, 4	; 17
 		dirPort |=(1<<outPin2);
-  84:	8d 9a       	sbi	0x11, 5	; 17
+  86:	8d 9a       	sbi	0x11, 5	; 17
 
 		//LED 3
 		out0 = ON;
-  86:	93 9a       	sbi	0x12, 3	; 18
+  88:	93 9a       	sbi	0x12, 3	; 18
 		out2 = OFF;
-  88:	95 98       	cbi	0x12, 5	; 18
+  8a:	95 98       	cbi	0x12, 5	; 18
 		sleep(255);
-  8a:	8f ef       	ldi	r24, 0xFF	; 255
-  8c:	db df       	rcall	.-74     	; 0x44 <sleep>
+  8c:	8f ef       	ldi	r24, 0xFF	; 255
+  8e:	da df       	rcall	.-76     	; 0x44 <sleep>
 
-		//LED1
+		//LED4
 		out0 = OFF;
-  8e:	93 98       	cbi	0x12, 3	; 18
+  90:	93 98       	cbi	0x12, 3	; 18
 		out2 = ON;
-  90:	95 9a       	sbi	0x12, 5	; 18
+  92:	95 9a       	sbi	0x12, 5	; 18
 		sleep(255);
-  92:	8f ef       	ldi	r24, 0xFF	; 255
-  94:	d7 df       	rcall	.-82     	; 0x44 <sleep>
-  96:	e9 cf       	rjmp	.-46     	; 0x6a <main+0x2>
+  94:	8f ef       	ldi	r24, 0xFF	; 255
+  96:	d6 df       	rcall	.-84     	; 0x44 <sleep>
+  98:	e9 cf       	rjmp	.-46     	; 0x6c <main+0x4>
 
-00000098 <__vector_6>:
+0000009a <__vector_5>:
 	}
 
 }
 
-ISR (TIMER0_OVF_vect)
+ISR (TIMER1_OVF_vect)
 {
-  98:	1f 92       	push	r1
-  9a:	0f 92       	push	r0
-  9c:	0f b6       	in	r0, 0x3f	; 63
-  9e:	0f 92       	push	r0
-  a0:	11 24       	eor	r1, r1
-  a2:	8f 93       	push	r24
+  9a:	1f 92       	push	r1
+  9c:	0f 92       	push	r0
+  9e:	0f b6       	in	r0, 0x3f	; 63
+  a0:	0f 92       	push	r0
+  a2:	11 24       	eor	r1, r1
+  a4:	8f 93       	push	r24
 	out0 = fb.bit0 ;
-  a4:	80 91 60 00 	lds	r24, 0x0060
-  a8:	80 fd       	sbrc	r24, 0
-  aa:	93 9a       	sbi	0x12, 3	; 18
-  ac:	80 ff       	sbrs	r24, 0
-  ae:	93 98       	cbi	0x12, 3	; 18
+  a6:	80 91 60 00 	lds	r24, 0x0060
+  aa:	80 fd       	sbrc	r24, 0
+  ac:	93 9a       	sbi	0x12, 3	; 18
+  ae:	80 ff       	sbrs	r24, 0
+  b0:	93 98       	cbi	0x12, 3	; 18
 	out1 = fb.bit1 ;
-  b0:	80 91 60 00 	lds	r24, 0x0060
-  b4:	86 95       	lsr	r24
-  b6:	81 70       	andi	r24, 0x01	; 1
-  b8:	80 fd       	sbrc	r24, 0
-  ba:	94 9a       	sbi	0x12, 4	; 18
-  bc:	80 ff       	sbrs	r24, 0
-  be:	94 98       	cbi	0x12, 4	; 18
+  b2:	80 91 60 00 	lds	r24, 0x0060
+  b6:	86 95       	lsr	r24
+  b8:	81 70       	andi	r24, 0x01	; 1
+  ba:	80 fd       	sbrc	r24, 0
+  bc:	94 9a       	sbi	0x12, 4	; 18
+  be:	80 ff       	sbrs	r24, 0
+  c0:	94 98       	cbi	0x12, 4	; 18
 	out2 = fb.bit2 ;
-  c0:	80 91 60 00 	lds	r24, 0x0060
-  c4:	82 fb       	bst	r24, 2
-  c6:	88 27       	eor	r24, r24
-  c8:	80 f9       	bld	r24, 0
-  ca:	80 fd       	sbrc	r24, 0
-  cc:	95 9a       	sbi	0x12, 5	; 18
-  ce:	80 ff       	sbrs	r24, 0
-  d0:	95 98       	cbi	0x12, 5	; 18
+  c2:	80 91 60 00 	lds	r24, 0x0060
+  c6:	82 fb       	bst	r24, 2
+  c8:	88 27       	eor	r24, r24
+  ca:	80 f9       	bld	r24, 0
+  cc:	80 fd       	sbrc	r24, 0
+  ce:	95 9a       	sbi	0x12, 5	; 18
+  d0:	80 ff       	sbrs	r24, 0
+  d2:	95 98       	cbi	0x12, 5	; 18
 }
-  d2:	8f 91       	pop	r24
-  d4:	0f 90       	pop	r0
-  d6:	0f be       	out	0x3f, r0	; 63
-  d8:	0f 90       	pop	r0
-  da:	1f 90       	pop	r1
-  dc:	18 95       	reti
+  d4:	8f 91       	pop	r24
+  d6:	0f 90       	pop	r0
+  d8:	0f be       	out	0x3f, r0	; 63
+  da:	0f 90       	pop	r0
+  dc:	1f 90       	pop	r1
+  de:	18 95       	reti
 
-000000de <_exit>:
-  de:	f8 94       	cli
+000000e0 <_exit>:
+  e0:	f8 94       	cli
 
-000000e0 <__stop_program>:
-  e0:	ff cf       	rjmp	.-2      	; 0xe0 <__stop_program>
+000000e2 <__stop_program>:
+  e2:	ff cf       	rjmp	.-2      	; 0xe2 <__stop_program>

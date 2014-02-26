@@ -42,17 +42,17 @@ void sleep(uint8_t millisec){
 	}
 }
 
-void timer0(void)
+void timer(void)
 {
-	TCCR0A = 0x00;                //Timer counter control register
-	TCCR0B = (0 << WGM02)|(1 << CS02)|(0 << CS01)|(0 << CS00); // WGM=0, prescale at 8
-	TIMSK |= (1 << TOIE0);         //Set bit 1 in TIMSK to enable Timer 1 overflow interrupt.
+	TCCR1A = 0x00;                //Timer counter control register
+	TCCR1B = (0 << WGM02)|(1 << CS02)|(0 << CS01)|(0 << CS00); // WGM=0, prescale at 8
+	TIMSK |= (1 << TOIE1);         //Set bit 1 in TIMSK to enable Timer 1 overflow interrupt.
 }
 
 int main(){
 
-	timer0();
-	////  sei();
+	timer();
+	sei();
 
 
 
@@ -97,7 +97,7 @@ int main(){
 
 }
 
-ISR (TIMER0_OVF_vect)
+ISR (TIMER1_OVF_vect)
 {
 	out0 = fb.bit0 ;
 	out1 = fb.bit1 ;
