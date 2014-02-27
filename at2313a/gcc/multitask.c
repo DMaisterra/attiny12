@@ -58,7 +58,7 @@ void tasker_init(void)
    /* port 0..5 as outputs */
  DDRD = _BV(PD5)|_BV(PD4)|_BV(PD3)|_BV(PD2)|_BV(PD1)|_BV(PD0);
  TCCR0A = _BV(WGM01);   /* CTC mode */
- OCR0A = 250;           /* 1 ms @ 16 MHz and prescaler = 64 */
+ OCR0A = 25;           /* 1 ms @ 16 MHz and prescaler = 64 */
  TIMSK = _BV(OCIE0A);   /* Enable Timer/Counter0 Compare Match A interrupt */
  TCCR0B = _BV(CS00) | _BV(CS01); /* prescaler 64, start timer */
 
@@ -84,37 +84,37 @@ void prio2_task(void)
 
 void prio3_task(void)
 {
- PORTB ^= _BV(PB0);
+ PORTD ^= _BV(PD0);
  task_timer[PRIO_3] = 10; /* every 100ms */
 }
 
 void prio4_task(void)
 {
- PORTB ^= _BV(PB1);
+ PORTD ^= _BV(PD1);
  task_timer[PRIO_4] = 20; /* every 200ms */
 }
 
 void prio5_task(void)
 {
- PORTB ^= _BV(PB2);
+ PORTD ^= _BV(PD2);
  task_timer[PRIO_5] = 30; /* every 300ms */
 }
 
 void prio6_task(void)
 {
- PORTB ^= _BV(PB3);
+ PORTD ^= _BV(PD3);
  task_timer[PRIO_6] = 40; /* every 400ms */
 }
 
 void prio7_task(void)
 {
- PORTB ^= _BV(PB4);
+ PORTD ^= _BV(PD4);
  task_timer[PRIO_7] = 50; /* every 500ms */
 }
 
 void prio8_task(void)
 {
- PORTB ^= _BV(PB5);
+ PORTD ^= _BV(PD5);
  task_timer[PRIO_8] = 60; /* every 600ms */
 }
 
