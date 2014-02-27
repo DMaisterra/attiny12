@@ -3,6 +3,9 @@
 ################################################################################
 
 # Add inputs and outputs from these tool invocations to the build variables 
+O_SRCS += \
+../ledblink.o 
+
 C_SRCS += \
 ../ledblink.c 
 
