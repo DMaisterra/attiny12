@@ -54,8 +54,6 @@ int matrix[LED_COUNT][2][NUMPINS] ={
 		//{ { IN, OUT, OUT, IN }, { LOW, HIGH, LOW, LOW } }
 }; // AB 0
 
-		//int matrix[LED_COUNT][2][NUMPINS] = {};
-
 /*
 int matrix[LED_COUNT][2][4] = {
 // PIN_CONFIG --- PIN_STATE
@@ -142,37 +140,29 @@ void timer(void)
 
 int main(){
 
-//timer();
-	//sei();
+	timer();
+	sei();
 
-	//allTriz(outPin2);
-	//dirPort = 0x00;
-	//dirPort |=(1<<outPin2);
-	//dirPort |=(1<<outPin3);
-
+#define SLEEPTIME 10
 while(1){
 
-	//blink LED 0
-	sleep(255);
+	sleep(SLEEPTIME);
 	turnOn(0);
 
-	sleep(255);
+	sleep(SLEEPTIME);
 	turnOn(1);
 
-	sleep(255);
+	sleep(SLEEPTIME);
 	turnOn(2);
 
-	//out2 = LOW;
-	//out3 = HIGH;
 
 }
 
 }
 
-/*
 ISR (TIMER1_OVF_vect)
 {
 	out0 = fb.bit0 ;
 	out1 = fb.bit1 ;
 	out2 = fb.bit2 ;
-}*/
+}

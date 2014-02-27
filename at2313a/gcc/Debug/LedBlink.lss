@@ -3,17 +3,17 @@ LedBlink.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         00000156  00000000  00000000  00000094  2**1
+  0 .text         000001a0  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000030  00800060  00000156  000001ea  2**0
+  1 .data         00000030  00800060  000001a0  00000234  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .bss          00000001  00800090  00800090  0000021a  2**0
+  2 .bss          00000001  00800090  00800090  00000264  2**0
                   ALLOC
-  3 .stab         00000c84  00000000  00000000  0000021c  2**2
+  3 .stab         00000ce4  00000000  00000000  00000264  2**2
                   CONTENTS, READONLY, DEBUGGING
-  4 .stabstr      000008e7  00000000  00000000  00000ea0  2**0
+  4 .stabstr      000008fa  00000000  00000000  00000f48  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .comment      00000011  00000000  00000000  00001787  2**0
+  5 .comment      00000011  00000000  00000000  00001842  2**0
                   CONTENTS, READONLY
 
 Disassembly of section .text:
@@ -24,7 +24,7 @@ Disassembly of section .text:
    4:	29 c0       	rjmp	.+82     	; 0x58 <__bad_interrupt>
    6:	28 c0       	rjmp	.+80     	; 0x58 <__bad_interrupt>
    8:	27 c0       	rjmp	.+78     	; 0x58 <__bad_interrupt>
-   a:	26 c0       	rjmp	.+76     	; 0x58 <__bad_interrupt>
+   a:	a5 c0       	rjmp	.+330    	; 0x156 <__vector_5>
    c:	25 c0       	rjmp	.+74     	; 0x58 <__bad_interrupt>
    e:	24 c0       	rjmp	.+72     	; 0x58 <__bad_interrupt>
   10:	23 c0       	rjmp	.+70     	; 0x58 <__bad_interrupt>
@@ -49,7 +49,7 @@ Disassembly of section .text:
   2e:	10 e0       	ldi	r17, 0x00	; 0
   30:	a0 e6       	ldi	r26, 0x60	; 96
   32:	b0 e0       	ldi	r27, 0x00	; 0
-  34:	e6 e5       	ldi	r30, 0x56	; 86
+  34:	e0 ea       	ldi	r30, 0xA0	; 160
   36:	f1 e0       	ldi	r31, 0x01	; 1
   38:	02 c0       	rjmp	.+4      	; 0x3e <__SP_L__+0x1>
   3a:	05 90       	lpm	r0, Z+
@@ -72,7 +72,7 @@ Disassembly of section .text:
   50:	b1 07       	cpc	r27, r17
   52:	e1 f7       	brne	.-8      	; 0x4c <.do_clear_bss_loop>
   54:	6e d0       	rcall	.+220    	; 0x132 <main>
-  56:	7d c0       	rjmp	.+250    	; 0x152 <_exit>
+  56:	a2 c0       	rjmp	.+324    	; 0x19c <_exit>
 
 00000058 <__bad_interrupt>:
   58:	d3 cf       	rjmp	.-90     	; 0x0 <__vectors>
@@ -281,38 +281,89 @@ void timer(void)
  130:	08 95       	ret
 
 00000132 <main>:
-	//dirPort |=(1<<outPin3);
+}
 
+int main(){
+
+	timer();
+ 132:	f8 df       	rcall	.-16     	; 0x124 <timer>
+	sei();
+ 134:	78 94       	sei
+
+#define SLEEPTIME 10
 while(1){
 
-	//blink LED 0
-	sleep(255);
- 132:	8f ef       	ldi	r24, 0xFF	; 255
- 134:	92 df       	rcall	.-220    	; 0x5a <sleep>
+	sleep(SLEEPTIME);
+ 136:	8a e0       	ldi	r24, 0x0A	; 10
+ 138:	90 df       	rcall	.-224    	; 0x5a <sleep>
 	turnOn(0);
- 136:	80 e0       	ldi	r24, 0x00	; 0
- 138:	90 e0       	ldi	r25, 0x00	; 0
- 13a:	bd df       	rcall	.-134    	; 0xb6 <turnOn>
+ 13a:	80 e0       	ldi	r24, 0x00	; 0
+ 13c:	90 e0       	ldi	r25, 0x00	; 0
+ 13e:	bb df       	rcall	.-138    	; 0xb6 <turnOn>
 
-	sleep(255);
- 13c:	8f ef       	ldi	r24, 0xFF	; 255
- 13e:	8d df       	rcall	.-230    	; 0x5a <sleep>
+	sleep(SLEEPTIME);
+ 140:	8a e0       	ldi	r24, 0x0A	; 10
+ 142:	8b df       	rcall	.-234    	; 0x5a <sleep>
 	turnOn(1);
- 140:	81 e0       	ldi	r24, 0x01	; 1
- 142:	90 e0       	ldi	r25, 0x00	; 0
- 144:	b8 df       	rcall	.-144    	; 0xb6 <turnOn>
+ 144:	81 e0       	ldi	r24, 0x01	; 1
+ 146:	90 e0       	ldi	r25, 0x00	; 0
+ 148:	b6 df       	rcall	.-148    	; 0xb6 <turnOn>
 
-	sleep(255);
- 146:	8f ef       	ldi	r24, 0xFF	; 255
- 148:	88 df       	rcall	.-240    	; 0x5a <sleep>
+	sleep(SLEEPTIME);
+ 14a:	8a e0       	ldi	r24, 0x0A	; 10
+ 14c:	86 df       	rcall	.-244    	; 0x5a <sleep>
 	turnOn(2);
- 14a:	82 e0       	ldi	r24, 0x02	; 2
- 14c:	90 e0       	ldi	r25, 0x00	; 0
- 14e:	b3 df       	rcall	.-154    	; 0xb6 <turnOn>
- 150:	f0 cf       	rjmp	.-32     	; 0x132 <main>
+ 14e:	82 e0       	ldi	r24, 0x02	; 2
+ 150:	90 e0       	ldi	r25, 0x00	; 0
+ 152:	b1 df       	rcall	.-158    	; 0xb6 <turnOn>
+ 154:	f0 cf       	rjmp	.-32     	; 0x136 <main+0x4>
 
-00000152 <_exit>:
- 152:	f8 94       	cli
+00000156 <__vector_5>:
+}
 
-00000154 <__stop_program>:
- 154:	ff cf       	rjmp	.-2      	; 0x154 <__stop_program>
+}
+
+ISR (TIMER1_OVF_vect)
+{
+ 156:	1f 92       	push	r1
+ 158:	0f 92       	push	r0
+ 15a:	0f b6       	in	r0, 0x3f	; 63
+ 15c:	0f 92       	push	r0
+ 15e:	11 24       	eor	r1, r1
+ 160:	8f 93       	push	r24
+	out0 = fb.bit0 ;
+ 162:	80 91 90 00 	lds	r24, 0x0090
+ 166:	80 fd       	sbrc	r24, 0
+ 168:	92 9a       	sbi	0x12, 2	; 18
+ 16a:	80 ff       	sbrs	r24, 0
+ 16c:	92 98       	cbi	0x12, 2	; 18
+	out1 = fb.bit1 ;
+ 16e:	80 91 90 00 	lds	r24, 0x0090
+ 172:	86 95       	lsr	r24
+ 174:	81 70       	andi	r24, 0x01	; 1
+ 176:	80 fd       	sbrc	r24, 0
+ 178:	93 9a       	sbi	0x12, 3	; 18
+ 17a:	80 ff       	sbrs	r24, 0
+ 17c:	93 98       	cbi	0x12, 3	; 18
+	out2 = fb.bit2 ;
+ 17e:	80 91 90 00 	lds	r24, 0x0090
+ 182:	82 fb       	bst	r24, 2
+ 184:	88 27       	eor	r24, r24
+ 186:	80 f9       	bld	r24, 0
+ 188:	80 fd       	sbrc	r24, 0
+ 18a:	94 9a       	sbi	0x12, 4	; 18
+ 18c:	80 ff       	sbrs	r24, 0
+ 18e:	94 98       	cbi	0x12, 4	; 18
+}
+ 190:	8f 91       	pop	r24
+ 192:	0f 90       	pop	r0
+ 194:	0f be       	out	0x3f, r0	; 63
+ 196:	0f 90       	pop	r0
+ 198:	1f 90       	pop	r1
+ 19a:	18 95       	reti
+
+0000019c <_exit>:
+ 19c:	f8 94       	cli
+
+0000019e <__stop_program>:
+ 19e:	ff cf       	rjmp	.-2      	; 0x19e <__stop_program>
