@@ -1,4 +1,5 @@
 /* ledblink.c, an LED blinking program at2313a */
+//http://makezine.com/projects/charlieplexing-leds-with-an-avr-atmega328-or-arduino/
 
 #define F_CPU 1000000UL
 
@@ -49,7 +50,7 @@ volatile bits_t frameBuffer[1];
 int matrix[LED_COUNT][2][NUMPINS] ={
 		{ { IN, IN, OUT, OUT }, { LOW,  LOW, HIGH,LOW } },
 		{ { IN, IN, OUT, OUT }, { LOW,  LOW, LOW, HIGH } },
-		{ { IN, IN, OUT, OUT }, { LOW,  LOW, LOW, HIGH } }
+		{ { IN, OUT, IN, OUT }, { LOW,  HIGH, LOW, LOW } }
 		//{ { IN, OUT, OUT, IN }, { LOW, HIGH, LOW, LOW } }
 }; // AB 0
 
@@ -119,6 +120,8 @@ void pinMode(int pin, int inOut){
 
 
 void turnOn( int led ) {
+	dirPort = 0xff;//apaga tudo antes de ligar algo. setar saidas todas com zero tbem?
+
 pinMode( outPin0, matrix[led][PIN_CONFIG][0] );
 pinMode( outPin1, matrix[led][PIN_CONFIG][1] );
 pinMode( outPin2, matrix[led][PIN_CONFIG][2] );
@@ -128,15 +131,6 @@ pinMode( outPin3, matrix[led][PIN_CONFIG][3] );
 	out1 = matrix[led][PIN_STATE][1] ;
 	out2 = matrix[led][PIN_STATE][2] ;
 	out3 = matrix[led][PIN_STATE][3] ;
-}
-
-
-void allTriz(){
-	dirPort = 0xff;
-}
-
-void setTriz(int port){
-	dirPort |=(1<<port);
 }
 
 void timer(void)
