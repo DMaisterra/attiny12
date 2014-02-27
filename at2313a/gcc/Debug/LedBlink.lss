@@ -3,39 +3,41 @@ LedBlink.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         00000056  00000000  00000000  00000074  2**1
+  0 .text         0000016e  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .bss          000000c1  00800060  00800060  000000ca  2**0
+  1 .data         00000030  00800060  0000016e  00000202  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          00000001  00800090  00800090  00000232  2**0
                   ALLOC
-  2 .stab         00000a08  00000000  00000000  000000cc  2**2
+  3 .stab         00000cc0  00000000  00000000  00000234  2**2
                   CONTENTS, READONLY, DEBUGGING
-  3 .stabstr      0000081f  00000000  00000000  00000ad4  2**0
+  4 .stabstr      00000907  00000000  00000000  00000ef4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .comment      00000011  00000000  00000000  000012f3  2**0
+  5 .comment      00000011  00000000  00000000  000017fb  2**0
                   CONTENTS, READONLY
 
 Disassembly of section .text:
 
 00000000 <__vectors>:
    0:	12 c0       	rjmp	.+36     	; 0x26 <__ctors_end>
-   2:	1f c0       	rjmp	.+62     	; 0x42 <__bad_interrupt>
-   4:	1e c0       	rjmp	.+60     	; 0x42 <__bad_interrupt>
-   6:	1d c0       	rjmp	.+58     	; 0x42 <__bad_interrupt>
-   8:	1c c0       	rjmp	.+56     	; 0x42 <__bad_interrupt>
-   a:	1b c0       	rjmp	.+54     	; 0x42 <__bad_interrupt>
-   c:	1a c0       	rjmp	.+52     	; 0x42 <__bad_interrupt>
-   e:	19 c0       	rjmp	.+50     	; 0x42 <__bad_interrupt>
-  10:	18 c0       	rjmp	.+48     	; 0x42 <__bad_interrupt>
-  12:	17 c0       	rjmp	.+46     	; 0x42 <__bad_interrupt>
-  14:	16 c0       	rjmp	.+44     	; 0x42 <__bad_interrupt>
-  16:	15 c0       	rjmp	.+42     	; 0x42 <__bad_interrupt>
-  18:	14 c0       	rjmp	.+40     	; 0x42 <__bad_interrupt>
-  1a:	13 c0       	rjmp	.+38     	; 0x42 <__bad_interrupt>
-  1c:	12 c0       	rjmp	.+36     	; 0x42 <__bad_interrupt>
-  1e:	11 c0       	rjmp	.+34     	; 0x42 <__bad_interrupt>
-  20:	10 c0       	rjmp	.+32     	; 0x42 <__bad_interrupt>
-  22:	0f c0       	rjmp	.+30     	; 0x42 <__bad_interrupt>
-  24:	0e c0       	rjmp	.+28     	; 0x42 <__bad_interrupt>
+   2:	2a c0       	rjmp	.+84     	; 0x58 <__bad_interrupt>
+   4:	29 c0       	rjmp	.+82     	; 0x58 <__bad_interrupt>
+   6:	28 c0       	rjmp	.+80     	; 0x58 <__bad_interrupt>
+   8:	27 c0       	rjmp	.+78     	; 0x58 <__bad_interrupt>
+   a:	26 c0       	rjmp	.+76     	; 0x58 <__bad_interrupt>
+   c:	25 c0       	rjmp	.+74     	; 0x58 <__bad_interrupt>
+   e:	24 c0       	rjmp	.+72     	; 0x58 <__bad_interrupt>
+  10:	23 c0       	rjmp	.+70     	; 0x58 <__bad_interrupt>
+  12:	22 c0       	rjmp	.+68     	; 0x58 <__bad_interrupt>
+  14:	21 c0       	rjmp	.+66     	; 0x58 <__bad_interrupt>
+  16:	20 c0       	rjmp	.+64     	; 0x58 <__bad_interrupt>
+  18:	1f c0       	rjmp	.+62     	; 0x58 <__bad_interrupt>
+  1a:	1e c0       	rjmp	.+60     	; 0x58 <__bad_interrupt>
+  1c:	1d c0       	rjmp	.+58     	; 0x58 <__bad_interrupt>
+  1e:	1c c0       	rjmp	.+56     	; 0x58 <__bad_interrupt>
+  20:	1b c0       	rjmp	.+54     	; 0x58 <__bad_interrupt>
+  22:	1a c0       	rjmp	.+52     	; 0x58 <__bad_interrupt>
+  24:	19 c0       	rjmp	.+50     	; 0x58 <__bad_interrupt>
 
 00000026 <__ctors_end>:
   26:	11 24       	eor	r1, r1
@@ -43,51 +45,297 @@ Disassembly of section .text:
   2a:	cf ed       	ldi	r28, 0xDF	; 223
   2c:	cd bf       	out	0x3d, r28	; 61
 
-0000002e <__do_clear_bss>:
-  2e:	11 e0       	ldi	r17, 0x01	; 1
+0000002e <__do_copy_data>:
+  2e:	10 e0       	ldi	r17, 0x00	; 0
   30:	a0 e6       	ldi	r26, 0x60	; 96
   32:	b0 e0       	ldi	r27, 0x00	; 0
-  34:	01 c0       	rjmp	.+2      	; 0x38 <.do_clear_bss_start>
+  34:	ee e6       	ldi	r30, 0x6E	; 110
+  36:	f1 e0       	ldi	r31, 0x01	; 1
+  38:	02 c0       	rjmp	.+4      	; 0x3e <__SP_L__+0x1>
+  3a:	05 90       	lpm	r0, Z+
+  3c:	0d 92       	st	X+, r0
+  3e:	a0 39       	cpi	r26, 0x90	; 144
+  40:	b1 07       	cpc	r27, r17
+  42:	d9 f7       	brne	.-10     	; 0x3a <__do_copy_data+0xc>
 
-00000036 <.do_clear_bss_loop>:
-  36:	1d 92       	st	X+, r1
+00000044 <__do_clear_bss>:
+  44:	10 e0       	ldi	r17, 0x00	; 0
+  46:	a0 e9       	ldi	r26, 0x90	; 144
+  48:	b0 e0       	ldi	r27, 0x00	; 0
+  4a:	01 c0       	rjmp	.+2      	; 0x4e <.do_clear_bss_start>
 
-00000038 <.do_clear_bss_start>:
-  38:	a1 32       	cpi	r26, 0x21	; 33
-  3a:	b1 07       	cpc	r27, r17
-  3c:	e1 f7       	brne	.-8      	; 0x36 <.do_clear_bss_loop>
-  3e:	02 d0       	rcall	.+4      	; 0x44 <main>
-  40:	08 c0       	rjmp	.+16     	; 0x52 <_exit>
+0000004c <.do_clear_bss_loop>:
+  4c:	1d 92       	st	X+, r1
 
-00000042 <__bad_interrupt>:
-  42:	de cf       	rjmp	.-68     	; 0x0 <__vectors>
+0000004e <.do_clear_bss_start>:
+  4e:	a1 39       	cpi	r26, 0x91	; 145
+  50:	b1 07       	cpc	r27, r17
+  52:	e1 f7       	brne	.-8      	; 0x4c <.do_clear_bss_loop>
+  54:	7a d0       	rcall	.+244    	; 0x14a <main>
+  56:	89 c0       	rjmp	.+274    	; 0x16a <_exit>
 
-00000044 <main>:
+00000058 <__bad_interrupt>:
+  58:	d3 cf       	rjmp	.-90     	; 0x0 <__vectors>
 
-	//LED 0
-	out1 = HIGH;
-	out0 = LOW;
-*/
-	dirPort |=(1<<PD5);
-  44:	8d 9a       	sbi	0x11, 5	; 17
-	dirPort |=(1<<PD4);
-  46:	8c 9a       	sbi	0x11, 4	; 17
-	out0 = HIGH;
-  48:	95 9a       	sbi	0x12, 5	; 18
-	out1 = LOW;
-  4a:	94 98       	cbi	0x12, 4	; 18
+0000005a <sleep>:
+{ { INPUT, INPUT, OUTPUT, OUTPUT }, { LOW, LOW, HIGH, LOW } }, // CD 10
+{ { INPUT, INPUT, OUTPUT, OUTPUT }, { LOW, LOW, LOW, HIGH } } // DC 11
+};*/
+
+void sleep(uint8_t millisec){
+	while(millisec){
+  5a:	07 c0       	rjmp	.+14     	; 0x6a <sleep+0x10>
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  5c:	e9 ef       	ldi	r30, 0xF9	; 249
+  5e:	f0 e0       	ldi	r31, 0x00	; 0
+  60:	31 97       	sbiw	r30, 0x01	; 1
+  62:	f1 f7       	brne	.-4      	; 0x60 <sleep+0x6>
+  64:	00 c0       	rjmp	.+0      	; 0x66 <sleep+0xc>
+  66:	00 00       	nop
+		_delay_ms(1);
+		millisec--;
+  68:	81 50       	subi	r24, 0x01	; 1
+{ { INPUT, INPUT, OUTPUT, OUTPUT }, { LOW, LOW, HIGH, LOW } }, // CD 10
+{ { INPUT, INPUT, OUTPUT, OUTPUT }, { LOW, LOW, LOW, HIGH } } // DC 11
+};*/
+
+void sleep(uint8_t millisec){
+	while(millisec){
+  6a:	81 11       	cpse	r24, r1
+  6c:	f7 cf       	rjmp	.-18     	; 0x5c <sleep+0x2>
+		_delay_ms(1);
+		millisec--;
+	}
+}
+  6e:	08 95       	ret
+
+00000070 <debug>:
+
+void debug(int zeroUm){
+
+	int sleepTime;
+	if(zeroUm==0){
+  70:	89 2b       	or	r24, r25
+  72:	19 f4       	brne	.+6      	; 0x7a <debug+0xa>
+		sleepTime = 255;
+  74:	cf ef       	ldi	r28, 0xFF	; 255
+  76:	d0 e0       	ldi	r29, 0x00	; 0
+  78:	02 c0       	rjmp	.+4      	; 0x7e <debug+0xe>
+	}else{
+		sleepTime = 75;
+  7a:	cb e4       	ldi	r28, 0x4B	; 75
+  7c:	d0 e0       	ldi	r29, 0x00	; 0
+	}
+
+	dirPort |=(1<<outPin2);
+  7e:	8c 9a       	sbi	0x11, 4	; 17
+	dirPort |=(1<<outPin3);
+  80:	8d 9a       	sbi	0x11, 5	; 17
+
+	while(1){
+		//blink LED 0
+		sleep(sleepTime);
+  82:	8c 2f       	mov	r24, r28
+  84:	ea df       	rcall	.-44     	; 0x5a <sleep>
+		out2 = LOW;
+  86:	94 98       	cbi	0x12, 4	; 18
+		out3 = HIGH;
+  88:	95 9a       	sbi	0x12, 5	; 18
+
+		sleep(sleepTime);
+  8a:	8c 2f       	mov	r24, r28
+  8c:	e6 df       	rcall	.-52     	; 0x5a <sleep>
+		out3 = LOW;
+  8e:	95 98       	cbi	0x12, 5	; 18
 		out2 = HIGH;
-		sleep(255);
+  90:	94 9a       	sbi	0x12, 4	; 18
+  92:	f7 cf       	rjmp	.-18     	; 0x82 <debug+0x12>
+
+00000094 <pinMode>:
+
+
+void pinMode(int pin, int inOut){
+
+	if(inOut==IN){
+		dirPort &=~(1<<pin);//triz
+  94:	91 b3       	in	r25, 0x11	; 17
+  96:	21 e0       	ldi	r18, 0x01	; 1
+  98:	30 e0       	ldi	r19, 0x00	; 0
+  9a:	08 2e       	mov	r0, r24
+  9c:	01 c0       	rjmp	.+2      	; 0xa0 <pinMode+0xc>
+  9e:	22 0f       	add	r18, r18
+  a0:	0a 94       	dec	r0
+  a2:	ea f7       	brpl	.-6      	; 0x9e <pinMode+0xa>
+}
+
+
+void pinMode(int pin, int inOut){
+
+	if(inOut==IN){
+  a4:	67 2b       	or	r22, r23
+  a6:	21 f4       	brne	.+8      	; 0xb0 <pinMode+0x1c>
+		dirPort &=~(1<<pin);//triz
+  a8:	20 95       	com	r18
+  aa:	29 23       	and	r18, r25
+  ac:	21 bb       	out	0x11, r18	; 17
+  ae:	08 95       	ret
+	}else{
+		dirPort |=(1<<pin);
+  b0:	92 2b       	or	r25, r18
+  b2:	91 bb       	out	0x11, r25	; 17
+  b4:	08 95       	ret
+
+000000b6 <turnOn>:
 
 	}
-*/
 }
-  4c:	80 e0       	ldi	r24, 0x00	; 0
-  4e:	90 e0       	ldi	r25, 0x00	; 0
-  50:	08 95       	ret
 
-00000052 <_exit>:
-  52:	f8 94       	cli
 
-00000054 <__stop_program>:
-  54:	ff cf       	rjmp	.-2      	; 0x54 <__stop_program>
+void turnOn( int led ) {
+  b6:	cf 93       	push	r28
+  b8:	df 93       	push	r29
+pinMode( outPin0, matrix[led][PIN_CONFIG][0] );
+  ba:	ec 01       	movw	r28, r24
+  bc:	84 e0       	ldi	r24, 0x04	; 4
+  be:	cc 0f       	add	r28, r28
+  c0:	dd 1f       	adc	r29, r29
+  c2:	8a 95       	dec	r24
+  c4:	e1 f7       	brne	.-8      	; 0xbe <turnOn+0x8>
+  c6:	c0 5a       	subi	r28, 0xA0	; 160
+  c8:	df 4f       	sbci	r29, 0xFF	; 255
+  ca:	68 81       	ld	r22, Y
+  cc:	79 81       	ldd	r23, Y+1	; 0x01
+  ce:	82 e0       	ldi	r24, 0x02	; 2
+  d0:	90 e0       	ldi	r25, 0x00	; 0
+  d2:	e0 df       	rcall	.-64     	; 0x94 <pinMode>
+pinMode( outPin1, matrix[led][PIN_CONFIG][1] );
+  d4:	6a 81       	ldd	r22, Y+2	; 0x02
+  d6:	7b 81       	ldd	r23, Y+3	; 0x03
+  d8:	83 e0       	ldi	r24, 0x03	; 3
+  da:	90 e0       	ldi	r25, 0x00	; 0
+  dc:	db df       	rcall	.-74     	; 0x94 <pinMode>
+pinMode( outPin2, matrix[led][PIN_CONFIG][2] );
+  de:	6c 81       	ldd	r22, Y+4	; 0x04
+  e0:	7d 81       	ldd	r23, Y+5	; 0x05
+  e2:	84 e0       	ldi	r24, 0x04	; 4
+  e4:	90 e0       	ldi	r25, 0x00	; 0
+  e6:	d6 df       	rcall	.-84     	; 0x94 <pinMode>
+pinMode( outPin3, matrix[led][PIN_CONFIG][3] );
+  e8:	6e 81       	ldd	r22, Y+6	; 0x06
+  ea:	7f 81       	ldd	r23, Y+7	; 0x07
+  ec:	85 e0       	ldi	r24, 0x05	; 5
+  ee:	90 e0       	ldi	r25, 0x00	; 0
+  f0:	d1 df       	rcall	.-94     	; 0x94 <pinMode>
+
+	out0 = matrix[led][PIN_STATE][0] ;
+  f2:	88 85       	ldd	r24, Y+8	; 0x08
+  f4:	80 fd       	sbrc	r24, 0
+  f6:	92 9a       	sbi	0x12, 2	; 18
+  f8:	80 ff       	sbrs	r24, 0
+  fa:	92 98       	cbi	0x12, 2	; 18
+	out1 = matrix[led][PIN_STATE][1] ;
+  fc:	8a 85       	ldd	r24, Y+10	; 0x0a
+  fe:	80 fd       	sbrc	r24, 0
+ 100:	93 9a       	sbi	0x12, 3	; 18
+ 102:	80 ff       	sbrs	r24, 0
+ 104:	93 98       	cbi	0x12, 3	; 18
+	out2 = matrix[led][PIN_STATE][2] ;
+ 106:	8c 85       	ldd	r24, Y+12	; 0x0c
+ 108:	80 fd       	sbrc	r24, 0
+ 10a:	94 9a       	sbi	0x12, 4	; 18
+ 10c:	80 ff       	sbrs	r24, 0
+ 10e:	94 98       	cbi	0x12, 4	; 18
+	out3 = matrix[led][PIN_STATE][3] ;
+ 110:	8e 85       	ldd	r24, Y+14	; 0x0e
+ 112:	80 fd       	sbrc	r24, 0
+ 114:	95 9a       	sbi	0x12, 5	; 18
+ 116:	80 ff       	sbrs	r24, 0
+ 118:	95 98       	cbi	0x12, 5	; 18
+}
+ 11a:	df 91       	pop	r29
+ 11c:	cf 91       	pop	r28
+ 11e:	08 95       	ret
+
+00000120 <allTriz>:
+
+
+void allTriz(){
+	dirPort = 0xff;
+ 120:	8f ef       	ldi	r24, 0xFF	; 255
+ 122:	81 bb       	out	0x11, r24	; 17
+ 124:	08 95       	ret
+
+00000126 <setTriz>:
+}
+
+void setTriz(int port){
+	dirPort |=(1<<port);
+ 126:	91 b3       	in	r25, 0x11	; 17
+ 128:	21 e0       	ldi	r18, 0x01	; 1
+ 12a:	30 e0       	ldi	r19, 0x00	; 0
+ 12c:	08 2e       	mov	r0, r24
+ 12e:	01 c0       	rjmp	.+2      	; 0x132 <setTriz+0xc>
+ 130:	22 0f       	add	r18, r18
+ 132:	0a 94       	dec	r0
+ 134:	ea f7       	brpl	.-6      	; 0x130 <setTriz+0xa>
+ 136:	92 2b       	or	r25, r18
+ 138:	91 bb       	out	0x11, r25	; 17
+ 13a:	08 95       	ret
+
+0000013c <timer>:
+}
+
+void timer(void)
+{
+	TCCR1A = 0x00;                //Timer counter control register
+ 13c:	1f bc       	out	0x2f, r1	; 47
+	TCCR1B = (0 << WGM02)|(1 << CS02)|(0 << CS01)|(0 << CS00); // WGM=0, prescale at 8
+ 13e:	84 e0       	ldi	r24, 0x04	; 4
+ 140:	8e bd       	out	0x2e, r24	; 46
+	TIMSK |= (1 << TOIE1);         //Set bit 1 in TIMSK to enable Timer 1 overflow interrupt.
+ 142:	89 b7       	in	r24, 0x39	; 57
+ 144:	80 68       	ori	r24, 0x80	; 128
+ 146:	89 bf       	out	0x39, r24	; 57
+ 148:	08 95       	ret
+
+0000014a <main>:
+	//dirPort |=(1<<outPin3);
+
+while(1){
+
+	//blink LED 0
+	sleep(255);
+ 14a:	8f ef       	ldi	r24, 0xFF	; 255
+ 14c:	86 df       	rcall	.-244    	; 0x5a <sleep>
+	turnOn(0);
+ 14e:	80 e0       	ldi	r24, 0x00	; 0
+ 150:	90 e0       	ldi	r25, 0x00	; 0
+ 152:	b1 df       	rcall	.-158    	; 0xb6 <turnOn>
+
+	sleep(255);
+ 154:	8f ef       	ldi	r24, 0xFF	; 255
+ 156:	81 df       	rcall	.-254    	; 0x5a <sleep>
+	turnOn(1);
+ 158:	81 e0       	ldi	r24, 0x01	; 1
+ 15a:	90 e0       	ldi	r25, 0x00	; 0
+ 15c:	ac df       	rcall	.-168    	; 0xb6 <turnOn>
+
+	sleep(255);
+ 15e:	8f ef       	ldi	r24, 0xFF	; 255
+ 160:	7c df       	rcall	.-264    	; 0x5a <sleep>
+	turnOn(2);
+ 162:	82 e0       	ldi	r24, 0x02	; 2
+ 164:	90 e0       	ldi	r25, 0x00	; 0
+ 166:	a7 df       	rcall	.-178    	; 0xb6 <turnOn>
+ 168:	f0 cf       	rjmp	.-32     	; 0x14a <main>
+
+0000016a <_exit>:
+ 16a:	f8 94       	cli
+
+0000016c <__stop_program>:
+ 16c:	ff cf       	rjmp	.-2      	; 0x16c <__stop_program>

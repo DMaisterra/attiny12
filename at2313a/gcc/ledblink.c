@@ -8,22 +8,29 @@
 
 #define HIGH 1
 #define LOW 0
+#define IN 0
+#define OUT 1
 #define NUMPINS 4 //max 12 leds: n*n-n
-#define LED_COUNT 12 //num leds instalados
+#define LED_COUNT 3 //num leds instalados
+#define PIN_CONFIG 0
+#define PIN_STATE 1
+
 
 #define dirPort DDRD
-#define outPin3 PD2
-#define outPin2 PD3
-#define outPin1 PD4
-#define outPin0 PD5
 
-#define  out3 outPort.bit2
-#define  out2 outPort.bit3
-#define  out1 outPort.bit4
-#define  out0 outPort.bit5
+#define outPin0 PD2
+#define outPin1 PD3
+#define outPin2 PD4
+#define outPin3 PD5
 
+#define  out0 outPort.bit2
+#define  out1 outPort.bit3
+#define  out2 outPort.bit4
+#define  out3 outPort.bit5
+
+#define dirPort1 (*((volatile bits_t*)(&DDRD)))
 #define outPort (*((volatile bits_t*)(&PORTD)))
-//#define fb frameBuffer[0]
+#define fb frameBuffer[0]
 
 typedef struct {
 	unsigned char bit0:1;
@@ -36,11 +43,17 @@ typedef struct {
 	unsigned char bit7:1;
 } bits_t;
 
-
 volatile bits_t frameBuffer[1];
 
 
-int matrix[LED_COUNT][2][NUMPINS] = {};
+int matrix[LED_COUNT][2][NUMPINS] ={
+		{ { IN, IN, OUT, OUT }, { LOW,  LOW, HIGH,LOW } },
+		{ { IN, IN, OUT, OUT }, { LOW,  LOW, LOW, HIGH } },
+		{ { IN, IN, OUT, OUT }, { LOW,  LOW, LOW, HIGH } }
+		//{ { IN, OUT, OUT, IN }, { LOW, HIGH, LOW, LOW } }
+}; // AB 0
+
+		//int matrix[LED_COUNT][2][NUMPINS] = {};
 
 /*
 int matrix[LED_COUNT][2][4] = {
@@ -61,7 +74,6 @@ int matrix[LED_COUNT][2][4] = {
 { { INPUT, INPUT, OUTPUT, OUTPUT }, { LOW, LOW, LOW, HIGH } } // DC 11
 };*/
 
-/*
 void sleep(uint8_t millisec){
 	while(millisec){
 		_delay_ms(1);
@@ -69,8 +81,62 @@ void sleep(uint8_t millisec){
 	}
 }
 
+void debug(int zeroUm){
+
+	int sleepTime;
+	if(zeroUm==0){
+		sleepTime = 255;
+	}else{
+		sleepTime = 75;
+	}
+
+	dirPort |=(1<<outPin2);
+	dirPort |=(1<<outPin3);
+
+	while(1){
+		//blink LED 0
+		sleep(sleepTime);
+		out2 = LOW;
+		out3 = HIGH;
+
+		sleep(sleepTime);
+		out3 = LOW;
+		out2 = HIGH;
+	}
+
+}
+
+
+void pinMode(int pin, int inOut){
+
+	if(inOut==IN){
+		dirPort &=~(1<<pin);//triz
+	}else{
+		dirPort |=(1<<pin);
+
+	}
+}
+
+
+void turnOn( int led ) {
+pinMode( outPin0, matrix[led][PIN_CONFIG][0] );
+pinMode( outPin1, matrix[led][PIN_CONFIG][1] );
+pinMode( outPin2, matrix[led][PIN_CONFIG][2] );
+pinMode( outPin3, matrix[led][PIN_CONFIG][3] );
+
+	out0 = matrix[led][PIN_STATE][0] ;
+	out1 = matrix[led][PIN_STATE][1] ;
+	out2 = matrix[led][PIN_STATE][2] ;
+	out3 = matrix[led][PIN_STATE][3] ;
+}
+
+
 void allTriz(){
-	dirPort =0xff;
+	dirPort = 0xff;
+}
+
+void setTriz(int port){
+	dirPort |=(1<<port);
 }
 
 void timer(void)
@@ -79,71 +145,40 @@ void timer(void)
 	TCCR1B = (0 << WGM02)|(1 << CS02)|(0 << CS01)|(0 << CS00); // WGM=0, prescale at 8
 	TIMSK |= (1 << TOIE1);         //Set bit 1 in TIMSK to enable Timer 1 overflow interrupt.
 }
-*/
+
 int main(){
 
-	//timer();
+//timer();
 	//sei();
 
+	//allTriz(outPin2);
+	//dirPort = 0x00;
+	//dirPort |=(1<<outPin2);
+	//dirPort |=(1<<outPin3);
 
-	//dirPort &=~(1<<outPin0);//triz
-	//allTriz();
-	/*dirPort |=(1<<outPin0);
-	dirPort |=(1<<outPin1);
-	dirPort |=(1<<outPin2);
-	dirPort |=(1<<outPin3);
+while(1){
 
-	//LED 0
-	out1 = HIGH;
-	out0 = LOW;
-*/
-	dirPort |=(1<<PD5);
-	dirPort |=(1<<PD4);
-	out0 = HIGH;
-	out1 = LOW;
-/*
-	while(0){
+	//blink LED 0
+	sleep(255);
+	turnOn(0);
 
-		//dirPort &=~(1<<outPinX);//input triz
-		//dirPort |=(1<<outPinX); //output
+	sleep(255);
+	turnOn(1);
 
+	sleep(255);
+	turnOn(2);
 
-		dirPort &=~(1<<outPin0);//triz
-		dirPort |=(1<<outPin1);
-		dirPort |=(1<<outPin2);
+	//out2 = LOW;
+	//out3 = HIGH;
 
-		//LED 0
-		out1 = HIGH;
-		out2 = LOW;
-		sleep(255);
-
-
-		//LED1
-		out1 = LOW;
-		out2 = HIGH;
-		sleep(255);
-
-		dirPort |=(1<<outPin0);
-		dirPort &=~(1<<outPin1);//triz
-		dirPort |=(1<<outPin2);
-
-		//LED 3
-		out0 = HIGH;
-		out2 = LOW;
-		sleep(255);
-
-		//LED4
-		out0 = LOW;
-		out2 = HIGH;
-		sleep(255);
-
-	}
-*/
 }
 
-//ISR (TIMER1_OVF_vect)
-//{
-	//out0 = fb.bit0 ;
-	//out1 = fb.bit1 ;
-	//out2 = fb.bit2 ;
-//}
+}
+
+/*
+ISR (TIMER1_OVF_vect)
+{
+	out0 = fb.bit0 ;
+	out1 = fb.bit1 ;
+	out2 = fb.bit2 ;
+}*/
