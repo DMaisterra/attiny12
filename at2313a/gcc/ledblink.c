@@ -137,7 +137,7 @@ void timer(void)
 	TCCR1B = (0 << WGM02)|(1 << CS02)|(0 << CS01)|(0 << CS00); // WGM=0, prescale at 8
 	TIMSK |= (1 << TOIE1);         //Set bit 1 in TIMSK to enable Timer 1 overflow interrupt.
 }
-
+/*
 int main(){
 
 	timer();
@@ -158,7 +158,7 @@ while(1){
 
 }
 
-}
+}*/
 
 ISR (TIMER1_OVF_vect)
 {

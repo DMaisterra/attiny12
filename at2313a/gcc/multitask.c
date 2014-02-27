@@ -56,10 +56,10 @@ ISR(TIMER0_COMPA_vect)
 void tasker_init(void)
 {
    /* port 0..5 as outputs */
- DDRB = _BV(PB5)|_BV(PB4)|_BV(PB3)|_BV(PB2)|_BV(PB1)|_BV(PB0);
+ DDRD = _BV(PD5)|_BV(PD4)|_BV(PD3)|_BV(PD2)|_BV(PD1)|_BV(PD0);
  TCCR0A = _BV(WGM01);   /* CTC mode */
  OCR0A = 250;           /* 1 ms @ 16 MHz and prescaler = 64 */
- TIMSK0 = _BV(OCIE0A);   /* Enable Timer/Counter0 Compare Match A interrupt */
+ TIMSK = _BV(OCIE0A);   /* Enable Timer/Counter0 Compare Match A interrupt */
  TCCR0B = _BV(CS00) | _BV(CS01); /* prescaler 64, start timer */
 
  /* experimental attempt to spread the (initial dispatch of) tasks */
