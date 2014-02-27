@@ -1,2 +1,7 @@
-/ledblink.eep
-/ledblink.hex
+*.map
+*.lss
+*.d
+*.o 
+*.elf 
+*.out 
+*.?hex
