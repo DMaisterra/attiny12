@@ -5,8 +5,9 @@ charlie dice
 A dice game that use leds connected with charlieplex method.  
 //based on http://makezine.com/projects/charlieplexing-leds-with-an-avr-atmega328-or-arduino/
 
-ATtiny2313
+![ScreenShot](docs/charlie-dice.gif)
 
+Using ATtiny2313, sholud work with arduino, atmega etc.Just set the correct port.
 4 pins: PD2-5, with 100R resistors
 PD2: ---100R---OUT0
 PD3: ---100R---OUT1
@@ -30,3 +31,4 @@ led7: 20
 led8: 10
 
 
+![Solder side](docs/solderSide.png)
