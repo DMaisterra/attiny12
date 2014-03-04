@@ -7,7 +7,7 @@
 
 MCU = attiny2313
 FORMAT = ihex
-TARGET = ledblink
+TARGET = charliedice
 SRC = $(TARGET).c 
 ASRC = 
 OPT = s
