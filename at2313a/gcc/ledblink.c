@@ -11,8 +11,8 @@
 #define LOW 0
 #define IN 0
 #define OUT 1
-#define NUMPINS 4 //max 12 leds: n*n-n
-#define LED_COUNT 3 //num leds instalados
+#define NUMPINS 4 //max leds: n*n-n (4 pins, 12 leds max)
+#define LED_COUNT 9 //num leds total
 #define PIN_CONFIG 0
 #define PIN_STATE 1
 
@@ -47,31 +47,21 @@ typedef struct {
 volatile bits_t frameBuffer[1];
 
 
-int matrix[LED_COUNT][2][NUMPINS] ={
-		{ { IN, IN, OUT, OUT }, { LOW,  LOW, HIGH,LOW } },
-		{ { IN, IN, OUT, OUT }, { LOW,  LOW, LOW, HIGH } },
-		{ { IN, OUT, IN, OUT }, { LOW,  HIGH, LOW, LOW } }
-		//{ { IN, OUT, OUT, IN }, { LOW, HIGH, LOW, LOW } }
-}; // AB 0
+uint8_t matrix[LED_COUNT][2][NUMPINS] ={
+		// pinConfig 0 1 2 3 ------- pinState 0 1 2 3	//X=0v , Y=5v
+		{ { IN, IN, OUT, OUT }, { LOW,  LOW, HIGH,LOW } }, //32: 3=0v, 2=5v 
+		{ { IN, IN, OUT, OUT }, { LOW,  LOW, LOW, HIGH } }, //23: 2=0v, 3=5v
+		{ { IN, OUT, IN, OUT }, { LOW,  HIGH, LOW, LOW } }, //31
+		{ { IN, OUT, IN, OUT }, { LOW,  LOW, LOW, HIGH } }, //13
 
-/*
-int matrix[LED_COUNT][2][4] = {
-// PIN_CONFIG --- PIN_STATE
-// A B C D    --- A B C D
-{ { OUTPUT, OUTPUT, INPUT, INPUT }, { HIGH, LOW, LOW, LOW } }, // AB 0
-{ { OUTPUT, OUTPUT, INPUT, INPUT }, { LOW, HIGH, LOW, LOW } }, // BA 1
-{ { INPUT, OUTPUT, OUTPUT, INPUT }, { LOW, HIGH, LOW, LOW } }, // BC 2
-{ { INPUT, OUTPUT, OUTPUT, INPUT }, { LOW, LOW, HIGH, LOW } }, // CB 3
-{ { OUTPUT, INPUT, OUTPUT, INPUT }, { HIGH, LOW, LOW, LOW } }, // AC 4
-{ { OUTPUT, INPUT, OUTPUT, INPUT }, { LOW, LOW, HIGH, LOW } }, // CA 5
-{ { OUTPUT, INPUT, INPUT, OUTPUT }, { HIGH, LOW, LOW, LOW } }, // AD 6
-{ { OUTPUT, INPUT, INPUT, OUTPUT }, { LOW, LOW, LOW, HIGH } }, // DA 7
-{ { INPUT, OUTPUT, INPUT, OUTPUT }, { LOW, HIGH, LOW, LOW } }; // BD 8
+		{ { IN, OUT, OUT, IN }, { LOW,  LOW, HIGH, LOW } }, //12
+		{ { OUT, IN, IN, OUT }, { HIGH,  LOW, LOW, LOW } }, //30
+		{ { IN, OUT, OUT, IN }, { LOW,  HIGH, LOW, LOW } }, //21
+		{ { OUT, IN, OUT, IN }, { HIGH,  LOW, LOW, LOW } }, //20
 
-{ { INPUT, OUTPUT, INPUT, OUTPUT }, { LOW, LOW, LOW, HIGH } }, // DB 9
-{ { INPUT, INPUT, OUTPUT, OUTPUT }, { LOW, LOW, HIGH, LOW } }, // CD 10
-{ { INPUT, INPUT, OUTPUT, OUTPUT }, { LOW, LOW, LOW, HIGH } } // DC 11
-};*/
+		{ { OUT, OUT, IN, IN }, { HIGH,  LOW, LOW, LOW } } //10
+}; 
+
 
 void sleep(uint8_t millisec){
 	while(millisec){
@@ -107,18 +97,19 @@ void debug(int zeroUm){
 
 
 void pinMode(int pin, int inOut){
-
+//debug(inOut);
 	if(inOut==IN){
-		dirPort &=~(1<<pin);//triz
+		dirPort &=~(1<<pin);//input (tristate)
 	}else{
-		dirPort |=(1<<pin);
+		dirPort |=(1<<pin);//output
 
 	}
 }
 
 
-void turnOn( int led ) {
-	dirPort = 0xff;//apaga tudo antes de ligar algo. setar saidas todas com zero tbem?
+void turnOn(int led ) {
+	//dirPort = 0x00;//apaga tudo antes de ligar algo. setar saidas todas com zero tbem?
+	//PORTD = 0x00; //TODO 
 
 pinMode( outPin0, matrix[led][PIN_CONFIG][0] );
 pinMode( outPin1, matrix[led][PIN_CONFIG][1] );
@@ -138,12 +129,12 @@ void timer(void)
 	TIMSK |= (1 << TOIE1);         //Set bit 1 in TIMSK to enable Timer 1 overflow interrupt.
 }
 
-int main(){
+int main(void){
 
 	timer();
-	sei();
+	//sei();
 
-#define SLEEPTIME 10
+#define SLEEPTIME 95
 while(1){
 
 	sleep(SLEEPTIME);
@@ -155,6 +146,23 @@ while(1){
 	sleep(SLEEPTIME);
 	turnOn(2);
 
+	sleep(SLEEPTIME);
+	turnOn(3);
+
+	sleep(SLEEPTIME);
+	turnOn(4);
+
+	sleep(SLEEPTIME);
+	turnOn(5);
+
+	sleep(SLEEPTIME);
+	turnOn(6);
+
+	sleep(SLEEPTIME);
+	turnOn(7);
+
+	sleep(SLEEPTIME);
+	turnOn(8);
 
 }
 
