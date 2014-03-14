@@ -3,14 +3,17 @@
 ################################################################################
 
 # Add inputs and outputs from these tool invocations to the build variables 
+O_SRCS += \
+../charliedice.o 
+
 C_SRCS += \
-../ledblink.c 
+../charliedice.c 
 
 OBJS += \
-./ledblink.o 
+./charliedice.o 
 
 C_DEPS += \
-./ledblink.d 
+./charliedice.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
