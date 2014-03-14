@@ -35,7 +35,7 @@ cbi DDRB, 0;
 cbi DDRB, 3;
 ;cbi DDRB, 0;
 cbi PORTB, 3;
-sbi PORTB, 0;
+sbi PORTB, 0;;
 
 
 end:
