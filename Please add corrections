@@ -1,0 +1,5 @@
+avr-gcc -c -mmcu=attiny12 -o sample.o  sample.S -v ###so can compile with avr-gcc stack...
+eally sorry for opening a branch of discussion but cant find the way to message you.
+Also ill be good that you add the recommends of installing libgcc... make out the burden of not finding libraries needed..
+Want to mention that was a great help to make the attiny12 a mind of useful.
+Thanks a lot.
